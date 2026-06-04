@@ -57,7 +57,21 @@ This will install the following main packages:
 * **python-dotenv:** To manage environment variables.
 * **werkzeug:** Helper library for password hashing.
 
-### 5. Initialize the Database
+### 5. Configure Environment Variables
+
+The application requires environment variables for security keys and API integrations:
+
+1. Copy the template file to create your local `.env` file:
+   ```bash
+   cp .env.example .env
+   ```
+   *(On Windows PowerShell, you can use `copy .env.example .env`)*
+
+2. Open the newly created `.env` file and fill in your keys:
+   * **`FLASK_SECRET_KEY`**: A secure random key for signing cookies (sessions).
+   * **`GEMINI_API_KEY`**: Your Google Gemini API Key from Google AI Studio.
+
+### 6. Initialize the Database
 
 Before running the application for the first time, you must create and initialize the database file and its tables. Execute the following command in your terminal from the project root:
 ```bash
