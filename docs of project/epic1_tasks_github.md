@@ -5,7 +5,7 @@ This document contains the detailed task definitions for **Epic 1** based on the
 ---
 
 ## 1. Create `requirements.txt` with project dependencies
-* **Title:** `[Epic 1] Configure requirements.txt and dependencies`
+* **Title:** `[Epic 1 - Task 1] Configure requirements.txt and dependencies`
 * **Description:**
   Configure the `requirements.txt` file containing all the necessary dependencies to initialize the Flask project and integrate it with the database and the Gemini API.
 * **Acceptance Criteria:**
@@ -16,7 +16,7 @@ This document contains the detailed task definitions for **Epic 1** based on the
 ---
 
 ## 2. Create database schema script `schema.sql`
-* **Title:** `[Epic 1] Create schema.sql for database definition`
+* **Title:** `[Epic 1 - Task 2] Create schema.sql for database definition`
 * **Description:**
   Write the SQL script to create the initial structure of the SQLite database (`conference_data.db`).
 * **Acceptance Criteria:**
@@ -28,7 +28,7 @@ This document contains the detailed task definitions for **Epic 1** based on the
 ---
 
 ## 3. Implement `services/db.py` for SQLite management
-* **Title:** `[Epic 1] Implement database connection and manipulation service (services/db.py)`
+* **Title:** `[Epic 1 - Task 3] Implement database connection and manipulation service (services/db.py)`
 * **Description:**
   Develop the service layer responsible for opening/closing connections to SQLite, returning rows mapped as dictionaries (row factory), and managing safe transactions/queries.
 * **Acceptance Criteria:**
@@ -40,7 +40,7 @@ This document contains the detailed task definitions for **Epic 1** based on the
 ---
 
 ## 4. Create CLI helper/command for database initialization (`init_db`)
-* **Title:** `[Epic 1] Implement CLI helper for database initialization (init_db)`
+* **Title:** `[Epic 1 - Task 4] Implement CLI helper for database initialization (init_db)`
 * **Description:**
   Develop a CLI command or helper script to read `schema.sql` and generate a clean SQLite database file.
 * **Acceptance Criteria:**
@@ -51,7 +51,7 @@ This document contains the detailed task definitions for **Epic 1** based on the
 ---
 
 ## 5. Create environment variables template `.env.example`
-* **Title:** `[Epic 1] Create .env.example environment template`
+* **Title:** `[Epic 1 - Task 5] Create .env.example environment template`
 * **Description:**
   Create a `.env.example` template file to document the required environment variables (such as API keys and Flask session secrets) without exposing real credentials.
 * **Acceptance Criteria:**
