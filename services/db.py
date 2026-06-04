@@ -54,3 +54,22 @@ def execute_db(query, args=()):
     with get_db() as conn:
         conn.execute(query, args)
         conn.commit()
+
+def init_db():
+    """
+    Initializes the database by executing the schema.sql script.
+    
+    Reads the schema definition and creates all required tables and indexes.
+    """
+    # Locate schema.sql in the project root relative to this file
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    schema_path = os.path.join(project_root, "schema.sql")
+    
+    with get_db() as conn:
+        with open(schema_path, "r", encoding="utf-8") as f:
+            conn.executescript(f.read())
+            
+    print("Database initialized successfully!")
+
+if __name__ == "__main__":
+    init_db()

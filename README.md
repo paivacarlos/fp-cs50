@@ -57,6 +57,14 @@ This will install the following main packages:
 * **python-dotenv:** To manage environment variables.
 * **werkzeug:** Helper library for password hashing.
 
+### 5. Initialize the Database
+
+Before running the application for the first time, you must create and initialize the database file and its tables. Execute the following command in your terminal from the project root:
+```bash
+python -m services.db
+```
+This will automatically generate the `conference_data.db` SQLite file and execute [schema.sql](file:///c:/Users/carlo/cs50/chapter_10/project/fp-cs50/schema.sql) to create all required tables and indexes. If you ever need to reset your database to a clean slate, you can simply delete the `conference_data.db` file and run this command again.
+
 ## Database Usage & Helpers
 
 To simplify database operations and avoid repeating connection boilerplate, you can use the database service located in [services/db.py](file:///c:/Users/carlo/cs50/chapter_10/project/fp-cs50/services/db.py).
