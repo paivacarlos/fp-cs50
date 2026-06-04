@@ -63,11 +63,11 @@ Before running the application for the first time, you must create and initializ
 ```bash
 python -m services.db
 ```
-This will automatically generate the `conference_data.db` SQLite file and execute [schema.sql](file:///c:/Users/carlo/cs50/chapter_10/project/fp-cs50/schema.sql) to create all required tables and indexes. If you ever need to reset your database to a clean slate, you can simply delete the `conference_data.db` file and run this command again.
+This will automatically generate the `conference_data.db` SQLite file and execute [schema.sql](schema.sql) to create all required tables and indexes. If you ever need to reset your database to a clean slate, you can simply delete the `conference_data.db` file and run this command again.
 
 ## Database Usage & Helpers
 
-To simplify database operations and avoid repeating connection boilerplate, you can use the database service located in [services/db.py](file:///c:/Users/carlo/cs50/chapter_10/project/fp-cs50/services/db.py).
+To simplify database operations and avoid repeating connection boilerplate, you can use the database service located in [services/db.py](services/db.py).
 
 ### Importing the Service
 
