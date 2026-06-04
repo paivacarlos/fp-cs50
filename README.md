@@ -56,3 +56,58 @@ This will install the following main packages:
 * **google-generativeai:** SDK to interact with Gemini API.
 * **python-dotenv:** To manage environment variables.
 * **werkzeug:** Helper library for password hashing.
+
+## Database Usage & Helpers
+
+To simplify database operations and avoid repeating connection boilerplate, you can use the database service located in [services/db.py](file:///c:/Users/carlo/cs50/chapter_10/project/fp-cs50/services/db.py).
+
+### Importing the Service
+
+Import the helpers into your routes or scripts:
+```python
+from services.db import query_db, execute_db, get_db
+```
+
+### 1. Fetching Data (`query_db`)
+
+Use `query_db` to run `SELECT` queries. 
+
+* **To fetch multiple records:**
+  ```python
+  users = query_db("SELECT * FROM users")
+  for user in users:
+      print(user["username"]) # Access columns by name thanks to sqlite3.Row
+  ```
+
+* **To fetch a single record:**
+  Set `one=True` to return only the first row (or `None` if no record is found):
+  ```python
+  user = query_db("SELECT * FROM users WHERE id = ?", (user_id,), one=True)
+  if user:
+      print(user["username"])
+  ```
+
+### 2. Modifying Data (`execute_db`)
+
+Use `execute_db` to run `INSERT`, `UPDATE`, or `DELETE` queries. It automatically commits changes to the database.
+
+* **Inserting a record:**
+  ```python
+  execute_db("INSERT INTO users (username, hash) VALUES (?, ?)", (username, hashed_password))
+  ```
+
+* **Updating a record:**
+  ```python
+  execute_db("UPDATE conferences SET headline = ? WHERE id = ?", (new_headline, conf_id))
+  ```
+
+### 3. Direct Connection Control (`get_db`)
+
+If you need full control over the database connection (e.g. managing transactions manually), use the connection context manager:
+```python
+with get_db() as conn:
+    # Run operations directly on the connection 'conn'
+    cursor = conn.cursor()
+    cursor.execute("...")
+    # Connection is automatically closed at the end of the block
+```
