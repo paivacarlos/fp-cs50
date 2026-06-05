@@ -7,10 +7,16 @@ This document contains the detailed task definitions for **Epic 2** based on the
 ## 1. Implement password hashing utilities
 * **Title:** `[Epic 2 - Task 1] Implement password hashing and validation`
 * **Description:**
-  Set up utilities to securely hash user passwords during registration and verify them during login using `werkzeug.security`.
+  Set up stateless helper functions to securely hash user passwords and verify them using `werkzeug.security` inside a dedicated utility module, along with unit tests using `pytest`.
 * **Acceptance Criteria:**
-  - [ ] Helper functions or logic defined using `generate_password_hash` to store passwords securely.
-  - [ ] Helper functions or logic defined using `check_password_hash` to validate passwords during login.
+  - [ ] Create `utils/security.py` containing:
+    - `hash_password(password)`: returns the hashed password string.
+    - `check_password(password_hash, password)`: returns boolean indicating if password is valid.
+  - [ ] Create `tests/test_security.py` with pytest test cases validating:
+    - Hashing produces a non-plain-text string.
+    - Hashing the same password twice produces different hashes (salts are working).
+    - `check_password` returns `True` for matching password and `False` for matching check, and `False` for incorrect passwords.
+  - [ ] Run and pass tests using command `pytest tests/test_security.py`.
 
 ---
 
