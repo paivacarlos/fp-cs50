@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - PressConference EA</title>
+    <title>Login - PressConference EA</title>
     <!-- Import Outfit font from Google Fonts for a premium look -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -57,7 +57,7 @@
             pointer-events: none;
         }
 
-        .register-wrapper {
+        .login-wrapper {
             position: relative;
             z-index: 2;
             width: 100%;
@@ -67,11 +67,11 @@
         }
 
         /* Media Sponsor Backdrop Theme Pattern */
-        .register-card {
+        .login-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 20px;
-            padding: 35px 40px;
+            padding: 40px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 
                         inset 0 1px 0 rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(16px);
@@ -97,47 +97,47 @@
 
         .header-section {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 35px;
             position: relative;
             z-index: 1;
         }
 
         /* Mic / Press Icon */
         .mic-icon {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             background: linear-gradient(135deg, var(--accent-glow) 0%, var(--accent-color) 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 12px auto;
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+            margin: 0 auto 15px auto;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
         }
 
         .mic-icon svg {
             fill: white;
-            width: 22px;
-            height: 22px;
+            width: 28px;
+            height: 28px;
         }
 
         .badge {
             background: rgba(99, 102, 241, 0.15);
             color: #818cf8;
-            padding: 3px 10px;
-            border-radius: 10px;
-            font-size: 10px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
             text-transform: uppercase;
             font-weight: 700;
             letter-spacing: 1.5px;
             display: inline-block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             border: 1px solid rgba(99, 102, 241, 0.3);
         }
 
         h2 {
             margin: 0;
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 800;
             color: var(--text-primary);
             letter-spacing: -0.5px;
@@ -145,36 +145,40 @@
 
         .tagline {
             color: var(--text-secondary);
-            font-size: 13px;
-            margin-top: 6px;
+            font-size: 14px;
+            margin-top: 8px;
             font-weight: 400;
         }
 
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 22px;
             position: relative;
             z-index: 1;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             color: var(--text-primary);
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
 
+        .input-wrapper {
+            position: relative;
+        }
+
         .form-group input {
             width: 100%;
-            padding: 12px 14px;
+            padding: 14px 16px;
             background: rgba(31, 41, 55, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            border-radius: 12px;
             box-sizing: border-box;
             color: white;
-            font-size: 14px;
+            font-size: 15px;
             transition: all 0.3s ease;
             font-family: inherit;
         }
@@ -190,19 +194,19 @@
             color: rgba(255, 255, 255, 0.3);
         }
 
-        /* Glowing Action Button */
+        /* Take the Stage Button styling */
         button {
             width: 100%;
-            padding: 14px;
+            padding: 15px;
             background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             color: white;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 8px;
+            margin-top: 10px;
             box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
             position: relative;
             z-index: 1;
@@ -220,7 +224,7 @@
         }
 
         .flash-messages {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             list-style: none;
             padding: 0;
             position: relative;
@@ -230,10 +234,10 @@
         .flash-message {
             background-color: rgba(239, 68, 68, 0.15);
             color: #f87171;
-            padding: 10px 14px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            font-size: 13px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
             border: 1px solid rgba(239, 68, 68, 0.3);
             display: flex;
             align-items: center;
@@ -243,8 +247,8 @@
         .footer-links {
             display: flex;
             justify-content: center;
-            margin-top: 20px;
-            font-size: 13px;
+            margin-top: 25px;
+            font-size: 14px;
             position: relative;
             z-index: 1;
         }
@@ -264,19 +268,20 @@
 </head>
 <body>
 
-<div class="register-wrapper">
-    <div class="register-card">
+<div class="login-wrapper">
+    <div class="login-card">
         <div class="backdrop-pattern"></div>
         
         <div class="header-section">
             <div class="mic-icon">
+                <!-- SVG Microphone Icon -->
                 <svg viewBox="0 0 24 24">
                     <path d="M12 2c1.66 0 3 1.34 3 3v7c0 1.66-1.34 3-3 3s-3-1.34-3-3v-7c0-1.66 1.34-3 3-3zm7 10h-2c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92z"/>
                 </svg>
             </div>
-            <span class="badge">Media Credentials</span>
-            <h2>Register Coach</h2>
-            <p class="tagline">Sign up to get authorized credentials for the media room</p>
+            <span class="badge">Media Center</span>
+            <h2>Press Room Access</h2>
+            <p class="tagline">Sign in to address the sports journalists</p>
         </div>
 
         <!-- Display error flash messages -->
@@ -285,7 +290,7 @@
             <ul class="flash-messages">
               {% for message in messages %}
                 <li class="flash-message">
-                    <svg style="width: 16px; height: 16px; fill: currentColor;" viewBox="0 0 20 20">
+                    <svg style="width: 18px; height: 18px; fill: currentColor;" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                     </svg>
                     {{ message }}
@@ -295,27 +300,26 @@
           {% endif %}
         {% endwith %}
 
-        <form method="POST" action="{{ url_for('auth.register') }}">
+        <form method="POST" action="{{ url_for('auth.login') }}">
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" required placeholder="Enter your coach name">
+                <div class="input-wrapper">
+                    <input type="text" id="username" name="username" required placeholder="Enter your coach name">
+                </div>
             </div>
             
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" required placeholder="Create secure key">
+                <div class="input-wrapper">
+                    <input type="password" id="password" name="password" required placeholder="Enter secure key">
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="confirm_password">Confirm Password</label>
-                <input type="password" id="confirm_password" name="confirm_password" required placeholder="Re-enter secure key">
-            </div>
-
-            <button type="submit">Request Credentials</button>
+            <button type="submit">Take the Stage</button>
         </form>
 
         <div class="footer-links">
-            <a href="/login">Already authorized? Log in</a>
+            <a href="{{ url_for('auth.register') }}">New Coach? Request Press Credentials</a>
         </div>
     </div>
 </div>

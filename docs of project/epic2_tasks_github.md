@@ -44,8 +44,8 @@ This document contains the detailed task definitions for **Epic 2** based on the
 * **Description:**
   Initialize and configure Flask sessions to keep users logged in securely.
 * **Acceptance Criteria:**
-  - [ ] Flask app configured to load `FLASK_SECRET_KEY` from the environment.
-  - [ ] Sessions configured with secure cookie parameters (e.g., HTTPOnly, SameSite='Lax').
+  - [x] Flask app configured to load `FLASK_SECRET_KEY` from the environment.
+  - [x] Sessions configured with secure cookie parameters (e.g., HTTPOnly, SameSite='Lax').
 
 ---
 

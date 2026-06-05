@@ -1,6 +1,14 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect, session
 
 main_bp = Blueprint("main", __name__)
+
+@main_bp.route("/", methods=["GET"])
+def index():
+    # Se o ID do usuário estiver na sessão, ele está logado
+    if "user_id" in session:
+        return redirect("/setup")
+    # Caso contrário, redireciona para a tela de login
+    return redirect("/login")
 
 @main_bp.route("/setup", methods=["GET"])
 def setup():
