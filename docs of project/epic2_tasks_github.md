@@ -25,16 +25,16 @@ This document contains the detailed task definitions for **Epic 2** based on the
 * **Description:**
   Create the registration form template (`register.html`) and backend route controller (`routes/auth.py`), covered by tests at all levels (unit, API, and frontend structure).
 * **Acceptance Criteria:**
-  - [ ] HTML registration form (`templates/register.html`) created with fields for username, password, and password confirmation.
-  - [ ] Route handler (`POST /register`) that validates inputs (e.g., checks if username already exists, matches password confirmation).
-  - [ ] Inserts the new user into the SQLite database.
-  - [ ] **Auto-login behavior:** Instantly populates the Flask session cookie with the new user's ID upon successful registration, directing them to the dashboard/setup page.
-  - [ ] Navigation link added to redirect users who already have an account to the login page.
-  - [ ] **Unit & API Tests (`tests/test_auth.py`):**
+  - [x] HTML registration form (`templates/register.html`) created with fields for username, password, and password confirmation.
+  - [x] Route handler (`POST /register`) that validates inputs (e.g., checks if username already exists, matches password confirmation).
+  - [x] Inserts the new user into the SQLite database.
+  - [x] **Auto-login behavior:** Instantly populates the Flask session cookie with the new user's ID upon successful registration, directing them to the dashboard/setup page.
+  - [x] Navigation link added to redirect users who already have an account to the login page.
+  - [x] **Unit & API Tests (`tests/test_auth.py`):**
     - Verify GET `/register` returns `200` status and includes the registration form elements.
     - Verify successful POST `/register` registers the user, performs auto-login (session cookie updated), and redirects correctly.
     - Verify POST `/register` validation errors (duplicate username, password mismatch) prevent database insert and return descriptive warnings.
-  - [ ] **Frontend Structure Tests (`tests/test_auth.py`):**
+  - [x] **Frontend Structure Tests (`tests/test_auth.py`):**
     - Assert HTML form contains inputs for `username`, `password`, and `confirm_password` with appropriate form submission attributes.
 
 ---
