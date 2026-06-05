@@ -87,3 +87,9 @@ def test_register_duplicate_username(client):
     assert response2.status_code == 200
     assert b"User already exists." in response2.data
 
+def test_session_cookie_security_config():
+    # Valida se as diretivas de segurança dos cookies de sessão estão ativas
+    assert app.config["SESSION_COOKIE_HTTPONLY"] is True
+    assert app.config["SESSION_COOKIE_SAMESITE"] == "Lax"
+
+
