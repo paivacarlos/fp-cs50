@@ -77,5 +77,5 @@ This document contains the detailed task definitions for **Epic 2** based on the
 * **Description:**
   Create a route to securely terminate the user's session.
 * **Acceptance Criteria:**
-  - [ ] Route handler (`/logout`) that clears user data from the Flask session.
-  - [ ] Redirects the user to the landing page or login screen with a success message.
+  - [x] Route handler (`/logout`) that clears user data from the Flask session.
+  - [x] Redirects the user to the landing page or login screen with a success message.

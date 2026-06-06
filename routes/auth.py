@@ -1,3 +1,4 @@
+from utils.security import login_required
 from flask import Blueprint, render_template, request, session, flash, redirect
 from services.db import query_db, execute_db
 from utils.security import hash_password, check_password
@@ -62,3 +63,12 @@ def login():
         return render_template("login.html")
 
     return render_template("login.html")
+
+@auth_bp.route("/logout", methods=["GET"])
+@login_required
+def logout():
+    """Log the user out by clearing the session."""
+    session.clear()
+    flash("You have been logged out successfully.", "success")
+    return redirect("/login")
+

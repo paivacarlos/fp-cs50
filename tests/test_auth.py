@@ -224,6 +224,38 @@ def test_setup_route_allowed_when_logged_in(client):
     assert response.status_code == 200
     assert b"Dashboard" in response.data or b"Setup" in response.data
 
+def test_logout_success(client):
+    # 1. Registra e loga o usuário
+    client.post("/register", data={
+        "username": "coach_logout",
+        "password": "securepassword123",
+        "confirm_password": "securepassword123"
+    })
+    
+    # 2. Faz a chamada de logout
+    response = client.get("/logout")
+    
+    # Asserts
+    assert response.status_code == 302
+    assert response.headers["Location"] == "/login"
+    
+    # Valida que o user_id foi limpo da sessão
+    with client.session_transaction() as sess:
+        assert "user_id" not in sess
+
+def test_logout_unauthenticated(client):
+    # 1. Garante que está deslogado
+    with client.session_transaction() as sess:
+        sess.clear()
+        
+    # 2. Tenta fazer logout deslogado
+    response = client.get("/logout")
+    
+    # O decorator deve barrar e mandar para o login
+    assert response.status_code == 302
+    assert response.headers["Location"] == "/login"
+
+
 
 
 
