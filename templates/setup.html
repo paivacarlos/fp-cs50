@@ -1,46 +1,116 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Setup - PressConference EA</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f6f9;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            color: #333;
-        }
-        .container {
-            background-color: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            max-width: 500px;
-        }
-        h1 {
-            color: #007bff;
-            margin-bottom: 16px;
-        }
-        p {
-            color: #666;
-            line-height: 1.6;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Dashboard / Setup</h1>
-        <p>Welcome to the Press Conference Setup page! This page is currently a placeholder and will be fully implemented in Epic 3.</p>
-        <div style="margin-top: 24px;">
-            <a href="{{ url_for('auth.logout') }}" style="color: #e3342f; text-decoration: none; font-weight: 600; font-family: inherit; border: 1px solid #e3342f; padding: 10px 20px; border-radius: 6px; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#e3342f'; this.style.color='white'" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#e3342f'">Logout / Sair</a>
+{% extends "base.html" %}
+
+{% block title %}Setup - PressConference EA{% endblock %}
+
+{% block badge %}<span class="badge">Press Briefing</span>{% endblock %}
+{% block card_title %}Match Briefing{% endblock %}
+{% block card_tagline %}Upload your match screenshot and set the initial context{% endblock %}
+
+{% block content %}
+<form id="setup-form" method="POST" action="/api/conference/start" enctype="multipart/form-data">
+    <!-- Game Screenshot Input -->
+    <div class="form-group">
+        <label>Game Screenshot</label>
+        <div id="drop-zone" class="drop-zone">
+            <svg viewBox="0 0 24 24">
+                <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+            </svg>
+            <span class="drop-zone-text">Drag & drop your image here or click to browse</span>
+            <input type="file" id="screenshot" name="screenshot" accept="image/*" required style="display: none;">
+        </div>
+        
+        <!-- Image Preview Container -->
+        <div id="preview-container" class="preview-container" style="display: none;">
+            <img id="preview-image" src="" alt="Screenshot Preview">
         </div>
     </div>
-</body>
-</html>
+    
+    <!-- Initial Match Context Textarea -->
+    <div class="form-group">
+        <label for="initial_context">Initial Match Context</label>
+        <textarea id="initial_context" name="initial_context" required placeholder="e.g., We just lost 2-1 in the final minute due to a referee mistake, and our star player was sent off..." maxlength="200"></textarea>
+        <span id="char-counter" class="char-counter">200 characters remaining</span>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit">Take the Stage</button>
+</form>
+
+<div class="footer-links">
+    <a href="{{ url_for('auth.logout') }}" class="logout-link">Logout / Sair</a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Client-side interactions for Drag and Drop, image preview and character counter.
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('screenshot');
+    const previewContainer = document.getElementById('preview-container');
+    const previewImage = document.getElementById('preview-image');
+    
+    const contextTextarea = document.getElementById('initial_context');
+    const charCounter = document.getElementById('char-counter');
+    
+    // Trigger file selection on click
+    dropZone.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    // Handle file selection
+    fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+    });
+    
+    // Drag and Drop event listeners
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        }, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+        }, false);
+    });
+    
+    dropZone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        fileInput.files = files; // Assign files to file input
+        handleFiles(files);
+    });
+    
+    function handleFiles(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'flex';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please upload a valid image file (PNG, JPG, JPEG, GIF).');
+                fileInput.value = '';
+                previewContainer.style.display = 'none';
+            }
+        }
+    }
+    
+    // Character counter
+    contextTextarea.addEventListener('input', () => {
+        const remaining = 200 - contextTextarea.value.length;
+        charCounter.textContent = `${remaining} characters remaining`;
+        if (remaining <= 20) {
+            charCounter.style.color = '#ef4444'; // Red alert color when low
+        } else {
+            charCounter.style.color = ''; // Restore standard color
+        }
+    });
+</script>
+{% endblock %}
