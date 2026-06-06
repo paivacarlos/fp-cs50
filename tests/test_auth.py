@@ -197,4 +197,33 @@ def test_login_redirects_if_already_logged_in(client):
     assert response.headers["Location"] == "/setup"
 
 
+def test_setup_route_requires_login(client):
+    # Tenta acessar /setup sem estar logado
+    response = client.get("/setup")
+    
+    # Deve redirecionar (302) para a página de login
+    assert response.status_code == 302
+    assert response.headers["Location"] == "/login"
+    
+    # Segue o redirecionamento para verificar se a mensagem de flash é exibida
+    response_with_redirect = client.get("/setup", follow_redirects=True)
+    assert b"You need to be logged in to access this page." in response_with_redirect.data
+
+def test_setup_route_allowed_when_logged_in(client):
+    # Registra e loga o usuário automaticamente
+    client.post("/register", data={
+        "username": "coach_authed",
+        "password": "securepassword123",
+        "confirm_password": "securepassword123"
+    })
+    
+    # Acessa /setup
+    response = client.get("/setup")
+    
+    # Deve permitir o acesso (status 200) e conter o placeholder do setup
+    assert response.status_code == 200
+    assert b"Dashboard" in response.data or b"Setup" in response.data
+
+
+
 

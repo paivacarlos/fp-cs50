@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, session
+from utils.security import login_required
 
 main_bp = Blueprint("main", __name__)
 
@@ -11,5 +12,6 @@ def index():
     return redirect("/login")
 
 @main_bp.route("/setup", methods=["GET"])
+@login_required
 def setup():
     return render_template("setup.html")

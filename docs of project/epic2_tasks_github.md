@@ -66,9 +66,9 @@ This document contains the detailed task definitions for **Epic 2** based on the
 * **Description:**
   Create a custom Python decorator (`@login_required`) to secure views and API endpoints, ensuring only authenticated users can access them.
 * **Acceptance Criteria:**
-  - [ ] Decorator checks if user ID exists in the active Flask session.
-  - [ ] Redirects anonymous users to the login screen.
-  - [ ] Applied to protected routes (e.g., setup panel, history page, Q&A game loop endpoints).
+  - [x] Decorator checks if user ID exists in the active Flask session.
+  - [x] Redirects anonymous users to the login screen.
+  - [x] Applied to protected routes (e.g., setup panel, history page, Q&A game loop endpoints).
 
 ---
 
