@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, session, flash, redirect
 from services.db import query_db, execute_db
-from utils.security import hash_password
+from utils.security import hash_password, check_password
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -40,4 +40,25 @@ def register():
 
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
+    if "user_id" in session:
+        return redirect("/setup")
+
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        if not username or not password:
+            flash("Please, send all data.")
+            return render_template("login.html")
+
+        user = query_db("SELECT * FROM users WHERE username = ?", (username,), one=True)
+        if user and check_password(user["hash"], password):
+            session["user_id"] = user["id"]
+            session["username"] = user["username"]
+            flash("Logged in successfully.")
+            return redirect("/setup")
+        
+        flash("Invalid username or password.")
+        return render_template("login.html")
+
     return render_template("login.html")
