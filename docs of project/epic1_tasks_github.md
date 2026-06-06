@@ -1,6 +1,6 @@
 # GitHub Projects Tasks - Epic 1: Base Environment & DB Setup
 
-This document contains the detailed task definitions for **Epic 1** based on the [engineering_spec.md](file:///c:/Users/carlo/cs50/chapter_10/project/fp-cs50/engineering_spec.md). You can copy and paste the titles and descriptions directly to create "Draft Issues" or "Issues" in your GitHub Project.
+This document contains the detailed task definitions for **Epic 1** based on the [engineering_spec.md](engineering_spec.md). You can copy and paste the titles and descriptions directly to create "Draft Issues" or "Issues" in your GitHub Project.
 
 ---
 
