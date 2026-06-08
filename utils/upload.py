@@ -35,5 +35,6 @@ def save_upload_file(file, upload_folder: str) -> str:
 
     # 8. Retornar apenas o nome único do arquivo gerado
     # (Ou o caminho relativo, dependendo de como você quer armazenar no banco)
-    return f"/static/uploads/{unique_filename}"
+    return f"/{upload_folder}/{unique_filename}".replace('//', '/')
+
 
