@@ -17,7 +17,8 @@ def get_db():
     Ensures that the connection is opened, configured, and automatically
     closed when the block is exited, even if errors occur.
     """
-    conn = sqlite3.connect(DATABASE_PATH)
+    db_path = os.getenv("DATABASE_PATH", "conference_data.db")
+    conn = sqlite3.connect(db_path)
     
     # Configure row_factory to return sqlite3.Row objects (access columns by name)
     conn.row_factory = sqlite3.Row

@@ -133,3 +133,45 @@ with get_db() as conn:
     cursor.execute("...")
     # Connection is automatically closed at the end of the block
 ```
+
+## Running Tests
+
+We have automated tests to ensure everything in the project is working correctly. This includes:
+* **Backend Tests:** Checks for core logic, database queries, security, authentication, and secure file upload functions.
+* **UI (User Interface) Tests:** Browser-driven tests using **Playwright** that simulate actual clicks, typing, file selections, and drag-and-drop actions on the website screens.
+
+### ⚠️ Clean and Isolated Testing (Temporary Databases)
+To keep your main development/production data safe, we run tests on isolated, temporary databases:
+* **Backend tests** use `test_conference_data.db`.
+* **UI tests** use `test_ui_conference_data.db`.
+
+These files are created automatically when the tests start, populated with clean tables, and **fully deleted** when the tests finish. This prevents testing data from mixing with your active databases and leaves no residues or clutter on your computer!
+
+### How to Run the Tests
+
+Make sure your virtual environment is active before running these commands.
+
+1. **Install Browser Binaries (Required for UI tests):**
+   Before running the UI tests for the first time, you must download the Chromium browser used by Playwright:
+   ```bash
+   playwright install chromium
+   ```
+
+2. **Run All Tests:**
+   To run all backend and UI tests at once:
+   ```bash
+   pytest tests/
+   ```
+
+3. **Run Backend Tests Only:**
+   To run only the backend logic, security, and upload utility tests:
+   ```bash
+   pytest tests/test_auth.py tests/test_security.py tests/test_upload.py
+   ```
+
+4. **Run UI Tests Only:**
+   To run only the browser/UI tests:
+   ```bash
+   pytest tests/test_ui.py
+   ```
+
