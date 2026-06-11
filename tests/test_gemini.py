@@ -7,72 +7,78 @@ os.environ["GEMINI_API_KEY"] = "fake-test-key-123456"
 
 import pytest
 from unittest.mock import MagicMock, patch, mock_open
-from services.gemini import get_image_data, generate_first_question, generate_next_question
+from google.genai import types # type: ignore
+from services.gemini import get_image_part, generate_first_question, generate_next_question
 
 
-def test_get_image_data_success():
-    """Testa se get_image_data lê a imagem e retorna os bytes e o mime_type correto."""
+def test_get_image_part_success():
+    """Testa se get_image_part lê a imagem e retorna o types.Part binário correto."""
     fake_image_bytes = b"fake_png_data"
     
     with patch("os.path.exists", return_value=True), \
          patch("builtins.open", mock_open(read_data=fake_image_bytes)):
         
-        result = get_image_data("path/to/image.png")
+        result = get_image_part("path/to/image.png")
         
-        assert result["mime_type"] == "image/png"
-        assert result["data"] == fake_image_bytes
+        assert isinstance(result, types.Part)
+        assert result.inline_data.data == fake_image_bytes
+        assert result.inline_data.mime_type == "image/png"
 
 
-def test_get_image_data_jpg_mime():
+def test_get_image_part_jpg_mime():
     """Testa se a extensão .jpg é convertida para image/jpeg."""
     with patch("os.path.exists", return_value=True), \
          patch("builtins.open", mock_open(read_data=b"jpg_data")):
         
-        result = get_image_data("path/to/image.jpg")
-        assert result["mime_type"] == "image/jpeg"
+        result = get_image_part("path/to/image.jpg")
+        assert result.inline_data.mime_type == "image/jpeg"
 
 
-def test_get_image_data_file_not_found():
+def test_get_image_part_file_not_found():
     """Testa se lança FileNotFoundError se a imagem não existir."""
     with patch("os.path.exists", return_value=False):
         with pytest.raises(FileNotFoundError):
-            get_image_data("non_existent.png")
+            get_image_part("non_existent.png")
 
 
-@patch("services.gemini.model")
-@patch("services.gemini.get_image_data")
-def test_generate_first_question(mock_get_image, mock_model):
+@patch("services.gemini.client")
+@patch("services.gemini.get_image_part")
+def test_generate_first_question(mock_get_image, mock_client):
     """Testa se generate_first_question chama a API do Gemini com os parâmetros corretos."""
-    mock_get_image.return_value = {"mime_type": "image/png", "data": b"bytes"}
+    fake_part = types.Part.from_bytes(data=b"bytes", mime_type="image/png")
+    mock_get_image.return_value = fake_part
     
     # Mock da resposta da API do Gemini
     mock_response = MagicMock()
     mock_response.text = "  What was your biggest challenge in the match?  "
-    mock_model.generate_content.return_value = mock_response
+    mock_client.models.generate_content.return_value = mock_response
     
     question = generate_first_question("fake_image.png", "We won the game in a tough battle")
     
     # O resultado deve ter o strip() aplicado (removendo os espaços adicionados no mock)
     assert question == "What was your biggest challenge in the match?"
     
-    # Verifica se o método generate_content foi chamado
-    mock_model.generate_content.assert_called_once()
+    # Verifica se o método generate_content foi chamado em client.models
+    mock_client.models.generate_content.assert_called_once()
     
     # Captura os argumentos passados para a geração de conteúdo
-    called_args = mock_model.generate_content.call_args[0][0]
-    assert called_args[0] == {"mime_type": "image/png", "data": b"bytes"}
-    assert "We won the game in a tough battle" in called_args[1]
+    called_kwargs = mock_client.models.generate_content.call_args[1]
+    assert called_kwargs["model"] == "gemini-2.5-flash"
+    contents = called_kwargs["contents"]
+    assert contents[0] == fake_part
+    assert "We won the game in a tough battle" in contents[1]
 
 
-@patch("services.gemini.model")
-@patch("services.gemini.get_image_data")
-def test_generate_next_question(mock_get_image, mock_model):
+@patch("services.gemini.client")
+@patch("services.gemini.get_image_part")
+def test_generate_next_question(mock_get_image, mock_client):
     """Testa se generate_next_question envia o histórico de conversa corretamente no prompt."""
-    mock_get_image.return_value = {"mime_type": "image/png", "data": b"bytes"}
+    fake_part = types.Part.from_bytes(data=b"bytes", mime_type="image/png")
+    mock_get_image.return_value = fake_part
     
     mock_response = MagicMock()
     mock_response.text = "Why did you substitute the striker?"
-    mock_model.generate_content.return_value = mock_response
+    mock_client.models.generate_content.return_value = mock_response
     
     history = [
         {"question": "How do you feel?", "answer": "Happy."},
@@ -82,11 +88,12 @@ def test_generate_next_question(mock_get_image, mock_model):
     question = generate_next_question("fake_image.png", "Coach's notes", history)
     
     assert question == "Why did you substitute the striker?"
-    mock_model.generate_content.assert_called_once()
+    mock_client.models.generate_content.assert_called_once()
     
     # Captura e valida se o histórico de diálogo foi inserido no prompt
-    called_args = mock_model.generate_content.call_args[0][0]
-    prompt_sent = called_args[1]
+    called_kwargs = mock_client.models.generate_content.call_args[1]
+    contents = called_kwargs["contents"]
+    prompt_sent = contents[1]
     assert "Reporter: How do you feel?\nCoach: Happy." in prompt_sent
     assert "Reporter: And the fans?\nCoach: They supported us a lot." in prompt_sent
 

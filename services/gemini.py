@@ -1,5 +1,6 @@
 import os
-import google.generativeai as genai  # type: ignore
+from google import genai # type: ignore
+from google.genai import types # type: ignore
 
 # 1. Configuração do SDK do Gemini
 
@@ -9,12 +10,11 @@ api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
     raise ValueError("GEMINI_API_KEY is missing from environment variables. Please check your .env file")
 
-genai.configure(api_key=api_key)
-model = genai.GenerativeModel("gemini-1.5-flash") # Modelo ideal para texto e imagem
+client = genai.Client(api_key=api_key)
 
-def get_image_data(image_path: str) -> dict:
+def get_image_part(image_path: str) -> types.Part:
     """
-    Lê a imagem do disco e a converte no formato de dicionário binário
+    Lê a imagem do disco e a converte no formato de Part binário
     que o SDK do Gemini espera para payloads multimodais.
     """
     if not os.path.exists(image_path):
@@ -29,17 +29,17 @@ def get_image_data(image_path: str) -> dict:
     if ext == "jpg":
         mime_type = "image/jpeg"
         
-    return {
-        "mime_type": mime_type,
-        "data": image_bytes
-    }
+    return types.Part.from_bytes(
+        data=image_bytes,
+        mime_type=mime_type
+    )
 
 def generate_first_question(image_path: str, context: str) -> str:
     """
     Envia a imagem e as notas iniciais do técnico para o Gemini
     e retorna a primeira pergunta formulada pelo 'repórter'.
     """
-    img_data = get_image_data(image_path)
+    img_part = get_image_part(image_path)
     
     # Prompt instruindo a IA a agir como repórter
     prompt = (
@@ -50,7 +50,10 @@ def generate_first_question(image_path: str, context: str) -> str:
         "The question must be direct and in character. Do not include any intro, outro, or meta-commentary."
     )
     
-    response = model.generate_content([img_data, prompt])
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=[img_part, prompt]
+    )
     return response.text.strip()
 
 def generate_next_question(image_path: str, context: str, history: list) -> str:
@@ -58,7 +61,7 @@ def generate_next_question(image_path: str, context: str, history: list) -> str:
     Envia a imagem, as notas iniciais e o histórico de perguntas/respostas anteriores
     para o Gemini formular a pergunta lógica seguinte.
     """
-    img_data = get_image_data(image_path)
+    img_part = get_image_part(image_path)
     
     # Formata o histórico do diálogo para a IA entender o fluxo da conversa
     history_str = ""
@@ -75,5 +78,8 @@ def generate_next_question(image_path: str, context: str, history: list) -> str:
         "Do not repeat topics already discussed. Ask only one question. Do not include any intro or metadata."
     )
     
-    response = model.generate_content([img_data, prompt])
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=[img_part, prompt]
+    )
     return response.text.strip()
