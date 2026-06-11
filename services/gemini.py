@@ -2,7 +2,14 @@ import os
 import google.generativeai as genai  # type: ignore
 
 # 1. Configuração do SDK do Gemini
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+# Validando a chave do gemini
+api_key = os.getenv("GEMINI_API_KEY")
+
+if not api_key:
+    raise ValueError("GEMINI_API_KEY is missing from environment variables. Please check your .env file")
+
+genai.configure(api_key=api_key)
 model = genai.GenerativeModel("gemini-1.5-flash") # Modelo ideal para texto e imagem
 
 def get_image_data(image_path: str) -> dict:
