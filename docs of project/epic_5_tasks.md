@@ -8,9 +8,9 @@ This document breaks down the tasks of Epic 5 into atomized steps to track imple
 ## Technical Tasks
 
 ### Fase 1: Backend & Integração com Gemini (Services Layer)
-- [ ] **Task 5.1.1:** Criar a classe/modelo Pydantic `ChronicleResponse` com os campos `headline: str` e `chronicle: str` em [services/gemini.py](../services/gemini.py).
-- [ ] **Task 5.1.2:** Implementar a função `generate_chronicle(image_path: str, context: str, history: list) -> dict` em [services/gemini.py](../services/gemini.py), utilizando `response_mime_type="application/json"` e passando a classe `ChronicleResponse` no `response_schema` do Gemini SDK.
-- [ ] **Task 5.1.3:** Escrever testes unitários em [tests/test_gemini.py](../tests/test_gemini.py) para mockar a API do Gemini e garantir que `generate_chronicle` processe e retorne a estrutura de JSON correta.
+- [x] **Task 5.1.1:** Criar a classe/modelo Pydantic `ChronicleResponse` com os campos `headline: str` e `chronicle: str` em [services/gemini.py](../services/gemini.py).
+- [x] **Task 5.1.2:** Implementar a função `generate_chronicle(image_path: str, context: str, history: list) -> dict` em [services/gemini.py](../services/gemini.py), utilizando `response_mime_type="application/json"` e passando a classe `ChronicleResponse` no `response_schema` do Gemini SDK.
+- [x] **Task 5.1.3:** Escrever testes unitários em [tests/test_gemini.py](../tests/test_gemini.py) para mockar a API do Gemini e garantir que `generate_chronicle` processe e retorne a estrutura de JSON correta.
 
 ### Fase 2: Persistência & Fluxo dos Endpoints (Database & Routes Layer)
 - [ ] **Task 5.2.1:** Atualizar o endpoint `POST /api/conference/answer` em [routes/api.py](../routes/api.py) para detectar quando a rodada finalizada for a **Rodada 3**.

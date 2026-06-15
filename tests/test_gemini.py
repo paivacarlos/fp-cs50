@@ -8,7 +8,7 @@ os.environ["GEMINI_API_KEY"] = "fake-test-key-123456"
 import pytest
 from unittest.mock import MagicMock, patch, mock_open
 from google.genai import types # type: ignore
-from services.gemini import get_image_part, generate_first_question, generate_next_question
+from services.gemini import get_image_part, generate_first_question, generate_next_question, generate_chronicle, ChronicleResponse
 
 
 def test_get_image_part_success():
@@ -107,3 +107,45 @@ def test_missing_api_key_raises_error():
         # para que o código de validação global dele execute novamente sob o ambiente sem a variável.
         with pytest.raises(ValueError, match="GEMINI_API_KEY is missing"):
             importlib.reload(services.gemini)
+
+
+@patch("services.gemini.client")
+@patch("services.gemini.get_image_part")
+def test_generate_chronicle(mock_get_image, mock_client):
+    """Testa se generate_chronicle envia o prompt e as configurações corretas e retorna o JSON estruturado."""
+    fake_part = types.Part.from_bytes(data=b"bytes", mime_type="image/png")
+    mock_get_image.return_value = fake_part
+    
+    # 1. Mockamos a resposta da API do Gemini
+    # O SDK retorna a resposta estruturada em formato de string JSON dentro de response.text
+    mock_response = MagicMock()
+    mock_response.text = '{"headline": "Tough defeat at home", "chronicle": "The team fought hard but could not win."}'
+    mock_client.models.generate_content.return_value = mock_response
+    
+    # 2. Dados de entrada simulados
+    history = [
+        {"question": "How do you feel?", "answer": "Sad."},
+        {"question": "What is the plan?", "answer": "Work harder."}
+    ]
+    
+    # 3. Executamos a função
+    result = generate_chronicle("fake_image.png", "A tough loss", history)
+    
+    # 4. Asserts (Validações)
+    # A função deve ter parseado a string do mock e retornado um dicionário Python válido
+    assert isinstance(result, dict)
+    assert result["headline"] == "Tough defeat at home"
+    assert result["chronicle"] == "The team fought hard but could not win."
+    
+    # Garante que a API foi chamada
+    mock_client.models.generate_content.assert_called_once()
+    
+    # Captura os argumentos da chamada de geração para validar as configurações de resposta estruturada
+    called_kwargs = mock_client.models.generate_content.call_args[1]
+    assert called_kwargs["model"] == "gemini-2.5-flash"
+    
+    # Valida se passamos o response_mime_type e o response_schema corretos
+    config = called_kwargs["config"]
+    assert config.response_mime_type == "application/json"
+    assert config.response_schema.__name__ == "ChronicleResponse"
+
