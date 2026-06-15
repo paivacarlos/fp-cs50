@@ -1,6 +1,13 @@
 import os
+import json 
 from google import genai # type: ignore
 from google.genai import types # type: ignore
+from pydantic import BaseModel, Field
+
+class ChronicleResponse(BaseModel):
+    headline: str = Field(..., description="Main headline for the sports article.")
+    chronicle: str = Field(..., description="Full sports article text.")
+
 
 # 1. Configuração do SDK do Gemini
 
@@ -83,3 +90,37 @@ def generate_next_question(image_path: str, context: str, history: list) -> str:
         contents=[img_part, prompt]
     )
     return response.text.strip()
+
+def generate_chronicle(image_path: str, context: str, history: list) -> dict:
+    """
+    Envia a imagem, as notas e o histórico para o Gemini gerar
+    a manchete e a crônica, retornando um dicionário (dict).
+    """
+    img_part = get_image_part(image_path)
+    
+    # Formata o histórico do diálogo
+    history_str = ""
+    for round_data in history:
+        history_str += f"Reporter: {round_data['question']}\nCoach: {round_data['answer']}\n\n"
+        
+    prompt = (
+        "You are a tough, professional sports reporter covering EA FC. "
+        "Based on the coach's notes and the transcript of the interview:\n\n"
+        f"Notes: {context}\n"
+        f"Transcript: {history_str}\n\n"
+        "Generate ONE complete JSON object with two keys:\n"
+        "- 'headline': A catchy, punchy headline for the match review.\n"
+        "- 'chronicle': The full, detailed sports article (around 200-300 words)."        
+    )
+    
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=[img_part, prompt],
+        config=types.GenerateContentConfig(
+            response_mime_type="application/json",
+            response_schema=ChronicleResponse,
+        )
+    )
+    
+    # Com response_mime_type="application/json", response.text vem como JSON puro
+    return json.loads(response.text.strip())
