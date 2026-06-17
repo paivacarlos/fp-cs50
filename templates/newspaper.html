@@ -2,9 +2,30 @@
 
 {% block title %}Newspaper - {{ conference.headline or 'Newspaper' }}{% endblock %}
 
+{% block extra_css %}
+<!-- A folha de estilo static/css/newspaper.css será linkada aqui na Task 5.3.3 -->
+{% endblock %}
+
+{% block badge %}
+<!-- Badge da página do jornal -->
+{% endblock %}
+
+{% block card_title %}
+<!-- Título principal da seção do cartão -->
+{% endblock %}
+
+{% block card_tagline %}
+<!-- Subtítulo ou tagline do cartão -->
+{% endblock %}
+
 {% block content %}
+<!-- A marcação HTML semântica da crônica (manchete, imagem e texto) será desenvolvida aqui na Task 5.3.2 -->
 <div class="newspaper-container">
     <h1>{{ conference.headline }}</h1>
     <p>{{ conference.chronicle }}</p>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Scripts adicionais para interações, se necessários -->
 {% endblock %}

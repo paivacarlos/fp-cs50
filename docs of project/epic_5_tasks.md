@@ -23,7 +23,7 @@ This document breaks down the tasks of Epic 5 into atomized steps to track imple
   - O rollback do banco caso a geração da crônica pelo Gemini falhe na Rodada 3.
 
 ### Fase 3: Interface do Jornal & Estilização (Frontend Layer)
-- [ ] **Task 5.3.1:** Criar o novo template `templates/newspaper.html` herdando de [templates/base.html](../templates/base.html).
+- [x] **Task 5.3.1:** Criar o novo template `templates/newspaper.html` herdando de [templates/base.html](../templates/base.html).
 - [ ] **Task 5.3.2:** Desenhar a marcação HTML semântica em `newspaper.html` contendo:
   - Cabeçalho de jornal clássico (ex: "THE DAILY PRESS" com fonte gótica/serifada, data e autoria).
   - A manchete principal (`headline`) com destaque visual.
