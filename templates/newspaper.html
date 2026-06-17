@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}Newspaper - {{ conference.headline or 'Newspaper' }}{% endblock %}
+
+{% block content %}
+<div class="newspaper-container">
+    <h1>{{ conference.headline }}</h1>
+    <p>{{ conference.chronicle }}</p>
+</div>
+{% endblock %}

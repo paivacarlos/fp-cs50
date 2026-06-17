@@ -213,7 +213,13 @@ def test_submit_answer_success_round1_to_round2(mock_save_file, mock_gemini, aut
     assert rnd2["answer"] is None
 
 
-def test_submit_answer_success_round3_completion(authed_client):
+@patch("routes.api.generate_chronicle")
+def test_submit_answer_success_round3_completion(mock_chronicle, authed_client):
+    mock_chronicle.return_value = {
+        "headline": "Historic Victory!",
+        "chronicle": "What a match! The coach was brilliant..."
+    }
+    
     user = query_db("SELECT id FROM users ORDER BY id DESC LIMIT 1", one=True)
     user_id = user["id"]
     
@@ -245,6 +251,8 @@ def test_submit_answer_success_round3_completion(authed_client):
     assert response.status_code == 200
     json_data = response.get_json()
     assert json_data["status"] == "complete"
+    assert json_data["headline"] == "Historic Victory!"
+    assert json_data["chronicle"] == "What a match! The coach was brilliant..."
     
     rnd3 = query_db("SELECT * FROM rounds WHERE conference_id = ? AND round_number = 3", (conf_id,), one=True)
     assert rnd3["answer"] == "A3"
@@ -252,6 +260,56 @@ def test_submit_answer_success_round3_completion(authed_client):
     # Nenhuma rodada 4 deve ter sido criada
     rnd4 = query_db("SELECT * FROM rounds WHERE conference_id = ? AND round_number = 4", (conf_id,), one=True)
     assert rnd4 is None
+
+    # Verifica se os dados foram persistidos na tabela conferences
+    conf = query_db("SELECT * FROM conferences WHERE id = ?", (conf_id,), one=True)
+    assert conf["headline"] == "Historic Victory!"
+    assert conf["chronicle"] == "What a match! The coach was brilliant..."
+
+
+@patch("routes.api.generate_chronicle")
+def test_submit_answer_chronicle_failure_rollbacks_db(mock_chronicle, authed_client):
+    mock_chronicle.side_effect = Exception("Gemini API Timeout on Chronicle")
+    
+    user = query_db("SELECT id FROM users ORDER BY id DESC LIMIT 1", one=True)
+    user_id = user["id"]
+    
+    with get_db() as conn:
+        cursor = conn.execute(
+            "INSERT INTO conferences (user_id, screenshot_path, initial_context) VALUES (?, ?, ?)",
+            (user_id, "/static/uploads/mocked.png", "A tough game")
+        )
+        conf_id = cursor.lastrowid
+        conn.execute(
+            "INSERT INTO rounds (conference_id, round_number, question, answer) VALUES (?, 1, ?, ?)",
+            (conf_id, "Q1", "A1")
+        )
+        conn.execute(
+            "INSERT INTO rounds (conference_id, round_number, question, answer) VALUES (?, 2, ?, ?)",
+            (conf_id, "Q2", "A2")
+        )
+        conn.execute(
+            "INSERT INTO rounds (conference_id, round_number, question) VALUES (?, 3, ?)",
+            (conf_id, "Q3")
+        )
+        conn.commit()
+        
+    response = authed_client.post(
+        "/api/conference/answer",
+        json={"conference_id": conf_id, "answer": "A3"}
+    )
+    
+    assert response.status_code == 500
+    assert "Gemini API Timeout on Chronicle" in response.get_json()["error"]
+    
+    # Valida que o answer da rodada 3 voltou a ser NULL (ou seja, houve o rollback)
+    rnd3 = query_db("SELECT * FROM rounds WHERE conference_id = ? AND round_number = 3", (conf_id,), one=True)
+    assert rnd3["answer"] is None
+    
+    # Valida que a conferência não foi atualizada com crônica ou manchete
+    conf = query_db("SELECT * FROM conferences WHERE id = ?", (conf_id,), one=True)
+    assert conf["headline"] is None
+    assert conf["chronicle"] is None
 
 
 def test_submit_answer_double_answer_error(authed_client):
@@ -354,4 +412,54 @@ def test_submit_answer_gemini_failure_rollbacks_db(mock_gemini, authed_client):
     # Valida que o answer da rodada 1 voltou a ser NULL (ou seja, houve o rollback)
     rnd1 = query_db("SELECT * FROM rounds WHERE conference_id = ? AND round_number = 1", (conf_id,), one=True)
     assert rnd1["answer"] is None
+
+
+def test_newspaper_route_requires_login(client):
+    response = client.get("/conference/1/newspaper")
+    assert response.status_code == 302 # login_required redirects to /login
+
+
+def test_newspaper_route_success(authed_client):
+    user = query_db("SELECT id FROM users ORDER BY id DESC LIMIT 1", one=True)
+    user_id = user["id"]
+    
+    with get_db() as conn:
+        cursor = conn.execute(
+            "INSERT INTO conferences (user_id, screenshot_path, initial_context, headline, chronicle) VALUES (?, ?, ?, ?, ?)",
+            (user_id, "/static/uploads/mocked.png", "A tough game", "Historic Victory!", "What a match!")
+        )
+        conf_id = cursor.lastrowid
+        conn.commit()
+        
+    response = authed_client.get(f"/conference/{conf_id}/newspaper")
+    assert response.status_code == 200
+    assert b"Historic Victory!" in response.data
+    assert b"What a match!" in response.data
+
+
+def test_newspaper_route_unauthorized(authed_client):
+    # Create another user and their conference
+    with get_db() as conn:
+        cursor = conn.execute(
+            "INSERT INTO users (username, hash) VALUES (?, ?)",
+            ("another_coach_newspaper", "some_hash")
+        )
+        other_user_id = cursor.lastrowid
+        
+        cursor = conn.execute(
+            "INSERT INTO conferences (user_id, screenshot_path, initial_context, headline, chronicle) VALUES (?, ?, ?, ?, ?)",
+            (other_user_id, "/static/uploads/mocked.png", "A tough game", "Another Victory!", "Another match!")
+        )
+        other_conf_id = cursor.lastrowid
+        conn.commit()
+        
+    # Logged-in user tries to access other user's newspaper
+    response = authed_client.get(f"/conference/{other_conf_id}/newspaper")
+    assert response.status_code == 404
+
+
+def test_newspaper_route_not_found(authed_client):
+    # Non-existent conference
+    response = authed_client.get("/conference/999999/newspaper")
+    assert response.status_code == 404
 

@@ -13,11 +13,11 @@ This document breaks down the tasks of Epic 5 into atomized steps to track imple
 - [x] **Task 5.1.3:** Escrever testes unitários em [tests/test_gemini.py](../tests/test_gemini.py) para mockar a API do Gemini e garantir que `generate_chronicle` processe e retorne a estrutura de JSON correta.
 
 ### Fase 2: Persistência & Fluxo dos Endpoints (Database & Routes Layer)
-- [ ] **Task 5.2.1:** Atualizar o endpoint `POST /api/conference/answer` em [routes/api.py](../routes/api.py) para detectar quando a rodada finalizada for a **Rodada 3**.
-- [ ] **Task 5.2.2:** Integrar a chamada a `generate_chronicle` quando a Rodada 3 for respondida, passando o histórico de perguntas/respostas acumulado no banco, o screenshot e o contexto inicial.
-- [ ] **Task 5.2.3:** Criar uma transação/query SQL para atualizar os campos `headline` e `chronicle` na tabela `conferences` para a conferência atual.
-- [ ] **Task 5.2.4:** Criar uma nova rota `GET /conference/<int:conference_id>/newspaper` em [routes/main.py](../routes/main.py) protegida por `@login_required` que valida se a conferência pertence ao usuário logado, recupera os dados do banco e renderiza o template do jornal.
-- [ ] **Task 5.2.5:** Adicionar testes de integração em [tests/test_api.py](../tests/test_api.py) cobrindo:
+- [x] **Task 5.2.1:** Atualizar o endpoint `POST /api/conference/answer` em [routes/api.py](../routes/api.py) para detectar quando a rodada finalizada for a **Rodada 3**.
+- [x] **Task 5.2.2:** Integrar a chamada a `generate_chronicle` quando a Rodada 3 for respondida, passando o histórico de perguntas/respostas acumulado no banco, o screenshot e o contexto inicial.
+- [x] **Task 5.2.3:** Criar uma transação/query SQL para atualizar os campos `headline` e `chronicle` na tabela `conferences` para a conferência atual.
+- [x] **Task 5.2.4:** Criar uma nova rota `GET /conference/<int:conference_id>/newspaper` em [routes/main.py](../routes/main.py) protegida por `@login_required` que valida se a conferência pertence ao usuário logado, recupera os dados do banco e renderiza o template do jornal.
+- [x] **Task 5.2.5:** Adicionar testes de integração em [tests/test_api.py](../tests/test_api.py) cobrindo:
   - O sucesso do salvamento da manchete e crônica na finalização da Rodada 3.
   - A proteção de acesso não autorizado e autorização correta ao visualizar a rota `/conference/<id>/newspaper`.
   - O rollback do banco caso a geração da crônica pelo Gemini falhe na Rodada 3.

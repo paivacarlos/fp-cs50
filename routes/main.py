@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, redirect, session
+from flask import Blueprint, render_template, redirect, session, abort
 from utils.security import login_required
+from services.db import get_db
 
 main_bp = Blueprint("main", __name__)
 
@@ -15,3 +16,18 @@ def index():
 @login_required
 def setup():
     return render_template("setup.html")
+
+@main_bp.route("/conference/<int:conference_id>/newspaper", methods=["GET"])
+@login_required
+def newspaper(conference_id):
+    user_id = session["user_id"]
+    with get_db() as conn:
+        conference = conn.execute(
+            "SELECT * FROM conferences WHERE id = ? AND user_id = ?",
+            (conference_id, user_id)
+        ).fetchone()
+        
+    if not conference:
+        abort(404)
+        
+    return render_template("newspaper.html", conference=conference)

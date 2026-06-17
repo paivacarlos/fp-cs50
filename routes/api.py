@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify, session
 from utils.security import login_required
 from utils.upload import save_upload_file
 from services.db import get_db
-from services.gemini import generate_first_question, generate_next_question
+from services.gemini import generate_first_question, generate_next_question, generate_chronicle
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 
@@ -180,9 +180,57 @@ def submit_answer():
 
     # 7. Se for a rodada 3, finalizar a coletiva
     elif active_round_number == 3:
+        # Buscar o histórico completo de rodadas (incluindo a que acabamos de responder)
+        with get_db() as conn:
+            rounds_rows = conn.execute(
+                "SELECT question, answer FROM rounds WHERE conference_id = ? ORDER BY round_number ASC",
+                (conference_id,)
+            ).fetchall()
+            
+        history = [
+            {"question": r["question"], "answer": r["answer"]}
+            for r in rounds_rows
+        ]
+        
+        local_path = conference["screenshot_path"].lstrip("/")
+        initial_context = conference["initial_context"]
+        
+        # Chamar a API externa do Gemini para gerar a crônica
+        try:
+            chronicle_data = generate_chronicle(local_path, initial_context, history)
+        except Exception as e:
+            # Em caso de falha da IA, fazemos o rollback da resposta inserida para manter integridade
+            with get_db() as conn:
+                conn.execute(
+                    "UPDATE rounds SET answer = NULL WHERE id = ?",
+                    (active_round["id"],)
+                )
+                conn.commit()
+            return jsonify({"error": f"Failed to generate chronicle: {str(e)}"}), 500
+            
+        # Salvar a manchete e a crônica no banco de dados
+        try:
+            with get_db() as conn:
+                conn.execute(
+                    "UPDATE conferences SET headline = ?, chronicle = ? WHERE id = ?",
+                    (chronicle_data["headline"], chronicle_data["chronicle"], conference_id)
+                )
+                conn.commit()
+        except Exception as e:
+            # Em caso de erro de banco de dados ao salvar a crônica, fazemos o rollback da resposta
+            with get_db() as conn:
+                conn.execute(
+                    "UPDATE rounds SET answer = NULL WHERE id = ?",
+                    (active_round["id"],)
+                )
+                conn.commit()
+            return jsonify({"error": f"Database error saving chronicle: {str(e)}"}), 500
+            
         return jsonify({
             "status": "complete",
-            "message": "All rounds finished, ready for chronicle generation"
+            "message": "All rounds finished, chronicle generated successfully",
+            "headline": chronicle_data["headline"],
+            "chronicle": chronicle_data["chronicle"]
         }), 200
         
     else:
