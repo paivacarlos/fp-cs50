@@ -29,7 +29,7 @@ This document breaks down the tasks of Epic 5 into atomized steps to track imple
   - A manchete principal (`headline`) com destaque visual.
   - A imagem do screenshot (estilizada com filtro vintage, como tons de cinza ou sépia).
   - O texto da crônica (`chronicle`).
-- [ ] **Task 5.3.3:** Criar a folha de estilo [static/css/newspaper.css](../static/css/newspaper.css) aplicando cores de fundo estilo pergaminho/papel envelhecido (`#f4ebd0` ou similar) e tipografia clássica com fontes serifadas.
+- [x] **Task 5.3.3:** Criar a folha de estilo [static/css/newspaper.css](../static/css/newspaper.css) aplicando cores de fundo estilo pergaminho/papel envelhecido (`#f4ebd0` ou similar) e tipografia clássica com fontes serifadas.
 - [ ] **Task 5.3.4:** Implementar layout de colunas no corpo da crônica usando CSS Columns (`column-count`, `column-gap`, e `column-rule`).
 - [ ] **Task 5.3.5:** Aplicar efeitos de micro-animação (ex: textura sutil de papel) e estilo de Drop Cap (primeira letra do texto da crônica estilizada de forma clássica).
 - [ ] **Task 5.3.6:** Atualizar a lógica do JavaScript frontend (que faz as requisições de Q&A) para redirecionar o usuário para a rota `/conference/<id>/newspaper` assim que receber o status de conclusão da Rodada 3.
