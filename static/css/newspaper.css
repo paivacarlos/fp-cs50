@@ -20,6 +20,9 @@
     position: relative;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Premium entrance and stop-motion grain animations */
+    animation: paperFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both,
+               paperTextureGrain 12s steps(8) infinite;
 }
 
 .newspaper:hover {
@@ -158,10 +161,46 @@
     text-indent: 0; /* Traditional news style: first paragraph has no indent */
 }
 
+/* Drop Cap - Classic large initial letter for the start of the article */
+.chronicle-paragraph:first-of-type::first-letter {
+    float: left;
+    font-size: 3.5rem;
+    line-height: 0.8;
+    margin-top: 4px;
+    margin-right: 8px;
+    font-weight: 900;
+    color: #1a1a1a;
+    font-family: 'Playfair Display', 'Times New Roman', serif;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.05);
+}
+
 .empty-chronicle {
     text-align: center;
     font-style: italic;
     color: #8a7a5a;
     text-indent: 0;
     padding: 20px 0;
+}
+
+/* Keyframe Animations for entrance fade-in and stop-motion grain movement */
+@keyframes paperFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes paperTextureGrain {
+    0%, 100% { background-position: 0 0, 4px 4px; }
+    12.5% { background-position: -1px 2px, 3px 6px; }
+    25% { background-position: 1px -1px, 5px 3px; }
+    37.5% { background-position: -2px -2px, 2px 2px; }
+    50% { background-position: 2px 1px, 6px 5px; }
+    62.5% { background-position: -1px -1px, 3px 3px; }
+    75% { background-position: 1px 2px, 5px 6px; }
+    87.5% { background-position: -2px 1px, 2px 5px; }
 }
