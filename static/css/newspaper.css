@@ -1,6 +1,24 @@
 /* Import Google Fonts for classic and gothic/serif journalism styling */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
+/* Enable scrolling on the body for the newspaper page */
+body {
+    overflow-y: auto !important;
+    height: auto !important;
+    min-height: 100vh;
+    padding: 40px 0;
+}
+
+/* Override global style.css wrapper width for the newspaper desktop page layout */
+.app-wrapper {
+    max-width: 850px !important;
+    transition: max-width 0.4s ease;
+}
+
+.app-card {
+    padding: 35px 40px !important;
+}
+
 /* Core Newspaper Theme Layout */
 .newspaper {
     background: #f4ebd0; /* Parchment/Aged paper base color */
@@ -111,7 +129,8 @@
 
 /* Screenshot styling with Vintage Filter */
 .newspaper-image-container {
-    margin: 22px 0;
+    margin: 22px auto;
+    max-width: 550px;
     padding: 0;
     border: none;
     text-align: center;
@@ -145,8 +164,8 @@
     font-size: 14.5px;
     color: #2b2b2b;
     margin-top: 15px;
-    column-count: 2;
-    column-gap: 20px;
+    column-count: 3;
+    column-gap: 25px;
     column-rule: 1px dashed #d3c4a0;
 }
 
@@ -203,4 +222,39 @@
     62.5% { background-position: -1px -1px, 3px 3px; }
     75% { background-position: 1px 2px, 5px 6px; }
     87.5% { background-position: -2px 1px, 2px 5px; }
+}
+
+/* Newspaper Action Buttons / Navigation */
+.newspaper-actions {
+    margin-top: 30px;
+    text-align: center;
+    border-top: 1px dashed #d3c4a0;
+    padding-top: 20px;
+}
+
+.btn-new-conference {
+    display: inline-block;
+    padding: 10px 24px;
+    background-color: #2b2b2b;
+    color: #f4ebd0;
+    text-decoration: none;
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-weight: 700;
+    font-size: 13.5px;
+    letter-spacing: 0.5px;
+    border-radius: 4px;
+    border: 1px solid #1a1a1a;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+}
+
+.btn-new-conference:hover {
+    background-color: #f4ebd0;
+    color: #2b2b2b;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-new-conference:active {
+    transform: translateY(0);
 }
