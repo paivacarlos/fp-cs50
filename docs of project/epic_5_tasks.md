@@ -24,7 +24,7 @@ This document breaks down the tasks of Epic 5 into atomized steps to track imple
 
 ### Fase 3: Interface do Jornal & Estilização (Frontend Layer)
 - [x] **Task 5.3.1:** Criar o novo template `templates/newspaper.html` herdando de [templates/base.html](../templates/base.html).
-- [ ] **Task 5.3.2:** Desenhar a marcação HTML semântica em `newspaper.html` contendo:
+- [x] **Task 5.3.2:** Desenhar a marcação HTML semântica em `newspaper.html` contendo:
   - Cabeçalho de jornal clássico (ex: "THE DAILY PRESS" com fonte gótica/serifada, data e autoria).
   - A manchete principal (`headline`) com destaque visual.
   - A imagem do screenshot (estilizada com filtro vintage, como tons de cinza ou sépia).

@@ -19,11 +19,49 @@
 {% endblock %}
 
 {% block content %}
-<!-- A marcação HTML semântica da crônica (manchete, imagem e texto) será desenvolvida aqui na Task 5.3.2 -->
-<div class="newspaper-container">
-    <h1>{{ conference.headline }}</h1>
-    <p>{{ conference.chronicle }}</p>
-</div>
+<article class="newspaper">
+    <!-- Cabeçalho de jornal clássico -->
+    <header class="newspaper-header">
+        <div class="newspaper-masthead">
+            THE DAILY PRESS
+        </div>
+        <div class="newspaper-meta-bar">
+            <span class="meta-item volume">Vol. I - No. 1</span>
+            <span class="meta-item date">{{ conference.created_at }}</span>
+            <span class="meta-item price">Price: $0.10</span>
+        </div>
+        <div class="newspaper-authorship">
+            <span class="author-label">Written by</span>
+            <span class="author-name">Special Sports Correspondent</span>
+        </div>
+    </header>
+
+    <hr class="header-divider">
+
+    <!-- Manchete principal -->
+    <h1 class="newspaper-headline">{{ conference.headline }}</h1>
+
+    <!-- Imagem do screenshot (estilizada com filtro vintage via CSS posteriormente) -->
+    {% if conference.screenshot_path %}
+    <figure class="newspaper-image-container">
+        <img class="newspaper-image vintage-filter" src="{{ conference.screenshot_path }}" alt="Match Screenshot">
+        <figcaption class="newspaper-image-caption">Figure 1: Crucial match stats captured from the coach's perspective.</figcaption>
+    </figure>
+    {% endif %}
+
+    <!-- Texto da crônica (processado parágrafo a parágrafo) -->
+    <div class="newspaper-chronicle">
+        {% if conference.chronicle %}
+            {% for paragraph in conference.chronicle.split('\n') %}
+                {% if paragraph.strip() %}
+                    <p class="chronicle-paragraph">{{ paragraph.strip() }}</p>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p class="chronicle-paragraph empty-chronicle">No article details available.</p>
+        {% endif %}
+    </div>
+</article>
 {% endblock %}
 
 {% block extra_js %}
