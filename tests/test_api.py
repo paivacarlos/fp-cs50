@@ -474,3 +474,69 @@ def test_history_route_success(authed_client):
     assert response.status_code == 200
 
 
+def test_get_conference_details_requires_login(client):
+    response = client.get("/api/conference/1/details")
+    assert response.status_code == 302
+
+
+def test_get_conference_details_success(authed_client):
+    user = query_db("SELECT id FROM users ORDER BY id DESC LIMIT 1", one=True)
+    user_id = user["id"]
+    
+    with get_db() as conn:
+        cursor = conn.execute(
+            "INSERT INTO conferences (user_id, screenshot_path, initial_context, headline, chronicle) VALUES (?, ?, ?, ?, ?)",
+            (user_id, "/static/uploads/mocked.png", "A tough game", "Historic Victory!", "What a match!")
+        )
+        conf_id = cursor.lastrowid
+        conn.execute(
+            "INSERT INTO rounds (conference_id, round_number, question, answer) VALUES (?, 1, ?, ?)",
+            (conf_id, "Q1", "A1")
+        )
+        conn.execute(
+            "INSERT INTO rounds (conference_id, round_number, question, answer) VALUES (?, 2, ?, ?)",
+            (conf_id, "Q2", "A2")
+        )
+        conn.commit()
+        
+    response = authed_client.get(f"/api/conference/{conf_id}/details")
+    assert response.status_code == 200
+    json_data = response.get_json()
+    assert "conference" in json_data
+    assert "rounds" in json_data
+    assert json_data["conference"]["id"] == conf_id
+    assert json_data["conference"]["headline"] == "Historic Victory!"
+    assert len(json_data["rounds"]) == 2
+    assert json_data["rounds"][0]["question"] == "Q1"
+    assert json_data["rounds"][0]["answer"] == "A1"
+    assert json_data["rounds"][1]["question"] == "Q2"
+    assert json_data["rounds"][1]["answer"] == "A2"
+
+
+def test_get_conference_details_not_found(authed_client):
+    response = authed_client.get("/api/conference/999999/details")
+    assert response.status_code == 404
+    assert response.get_json()["error"] == "Conference not found"
+
+
+def test_get_conference_details_unauthorized(authed_client):
+    with get_db() as conn:
+        cursor = conn.execute(
+            "INSERT INTO users (username, hash) VALUES (?, ?)",
+            ("another_coach_details", "some_hash")
+        )
+        other_user_id = cursor.lastrowid
+        
+        cursor = conn.execute(
+            "INSERT INTO conferences (user_id, screenshot_path, initial_context) VALUES (?, ?, ?)",
+            (other_user_id, "/static/uploads/mocked.png", "A tough game")
+        )
+        other_conf_id = cursor.lastrowid
+        conn.commit()
+        
+    response = authed_client.get(f"/api/conference/{other_conf_id}/details")
+    assert response.status_code == 403
+    assert response.get_json()["error"] == "Unauthorized access to this conference"
+
+
+
