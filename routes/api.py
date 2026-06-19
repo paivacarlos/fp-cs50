@@ -235,3 +235,52 @@ def submit_answer():
         
     else:
         return jsonify({"error": "Invalid active round state"}), 400
+
+
+@api_bp.route("/conference/<int:conference_id>/details", methods=["GET"])
+@login_required
+def get_conference_details(conference_id):
+    user_id = session["user_id"]
+    with get_db() as conn:
+        conference = conn.execute(
+            "SELECT * FROM conferences WHERE id = ?",
+            (conference_id,)
+        ).fetchone()
+        
+        if not conference:
+            return jsonify({"error": "Conference not found"}), 404
+            
+        if conference["user_id"] != user_id:
+            return jsonify({"error": "Unauthorized access to this conference"}), 403
+            
+        rounds = conn.execute(
+            "SELECT * FROM rounds WHERE conference_id = ? ORDER BY round_number ASC",
+            (conference_id,)
+        ).fetchall()
+        
+    conference_data = {
+        "id": conference["id"],
+        "user_id": conference["user_id"],
+        "screenshot_path": conference["screenshot_path"],
+        "initial_context": conference["initial_context"],
+        "headline": conference["headline"],
+        "chronicle": conference["chronicle"],
+        "created_at": conference["created_at"]
+    }
+    
+    rounds_data = [
+        {
+            "id": r["id"],
+            "conference_id": r["conference_id"],
+            "round_number": r["round_number"],
+            "question": r["question"],
+            "answer": r["answer"]
+        }
+        for r in rounds
+    ]
+    
+    return jsonify({
+        "conference": conference_data,
+        "rounds": rounds_data
+    }), 200
+
