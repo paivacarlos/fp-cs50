@@ -463,3 +463,14 @@ def test_newspaper_route_not_found(authed_client):
     response = authed_client.get("/conference/999999/newspaper")
     assert response.status_code == 404
 
+
+def test_history_route_requires_login(client):
+    response = client.get("/history")
+    assert response.status_code == 302
+
+
+def test_history_route_success(authed_client):
+    response = authed_client.get("/history")
+    assert response.status_code == 200
+
+

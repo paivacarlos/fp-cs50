@@ -10,7 +10,7 @@ This document breaks down the tasks of Epic 6 into atomized steps to track imple
 ### Fase 1: Backend & API (Database & Routes Layer)
 - [x] **Task 6.1.1:** Criar a rota `GET /history` em [routes/main.py](../routes/main.py) protegida por `@login_required` que renderiza o template `templates/history.html` com uma lista vazia.
 - [x] **Task 6.1.2:** Implementar a query no banco de dados na rota `GET /history` para recuperar apenas as conferências finalizadas (`headline IS NOT NULL AND chronicle IS NOT NULL`) associadas ao `user_id` da sessão, ordenadas por `created_at DESC`, e passá-las ao template.
-- [ ] **Task 6.1.3:** Escrever testes de integração em [tests/test_api.py](../tests/test_api.py) para garantir que o acesso à rota `/history` redirecione usuários não autorizados para `/login` e retorne `200 OK` para usuários logados.
+- [x] **Task 6.1.3:** Escrever testes de integração em [tests/test_api.py](../tests/test_api.py) para garantir que o acesso à rota `/history` redirecione usuários não autorizados para `/login` e retorne `200 OK` para usuários logados.
 - [ ] **Task 6.1.4:** Criar o novo endpoint `GET /api/conference/<int:conference_id>/details` em [routes/api.py](../routes/api.py) protegido por `@login_required` que valida a propriedade da conferência, busca os dados da conferência e todas as rodadas (`rounds`) associadas, e retorna em formato JSON.
 - [ ] **Task 6.1.5:** Escrever testes de integração em [tests/test_api.py](../tests/test_api.py) cobrindo o endpoint de detalhes: sucesso (retorno correto de JSON estruturado), erro 404 (conferência não existente) e erro 403 (acesso não autorizado a conferências de outros usuários).
 
