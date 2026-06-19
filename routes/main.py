@@ -20,7 +20,14 @@ def setup():
 @main_bp.route("/history", methods=["GET"])
 @login_required
 def history():
-    return render_template("history.html", conferences=[])
+    user_id = session["user_id"]
+    with get_db() as conn:
+        conferences = conn.execute(
+            "SELECT * FROM conferences WHERE user_id = ? AND headline IS NOT NULL AND chronicle IS NOT NULL ORDER BY created_at DESC",
+            (user_id,)
+        ).fetchall()
+    return render_template("history.html", conferences=conferences)
+
 
 
 @main_bp.route("/conference/<int:conference_id>/newspaper", methods=["GET"])
