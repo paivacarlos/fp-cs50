@@ -17,6 +17,12 @@ def index():
 def setup():
     return render_template("setup.html")
 
+@main_bp.route("/history", methods=["GET"])
+@login_required
+def history():
+    return render_template("history.html", conferences=[])
+
+
 @main_bp.route("/conference/<int:conference_id>/newspaper", methods=["GET"])
 @login_required
 def newspaper(conference_id):

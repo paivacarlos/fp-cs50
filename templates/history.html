@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}History - PressConference EA{% endblock %}
+
+{% block badge %}<span class="badge">History</span>{% endblock %}
+{% block card_title %}Conference History{% endblock %}
+{% block card_tagline %}View your past conferences and retrospectives{% endblock %}
+
+{% block content %}
+<div id="history-container">
+    {% if not conferences %}
+        <div class="empty-state" style="text-align: center; padding: 40px 20px; color: var(--text-secondary, #9ca3af);">
+            <p style="font-size: 16px; margin: 0;">No past conferences found.</p>
+        </div>
+    {% else %}
+        <ul>
+            {% for conference in conferences %}
+                <li>{{ conference.headline }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
+<div class="footer-links" style="margin-top: 25px; text-align: center;">
+    <a href="{{ url_for('main.setup') }}" class="back-link" style="color: #818cf8; text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.3s ease;">← Back to Setup</a>
+</div>
+{% endblock %}
