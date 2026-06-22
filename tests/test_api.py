@@ -154,7 +154,7 @@ def test_start_conference_gemini_failure_cleans_file(mock_save_file, mock_gemini
         )
         
         assert response.status_code == 500
-        assert "Gemini service offline" in response.get_json()["error"]
+        assert "The AI model is temporarily exhausted" in response.get_json()["error"]
         
         # Garante que tentou apagar o arquivo
         mock_exists.assert_called()
@@ -300,7 +300,7 @@ def test_submit_answer_chronicle_failure_rollbacks_db(mock_chronicle, authed_cli
     )
     
     assert response.status_code == 500
-    assert "Gemini API Timeout on Chronicle" in response.get_json()["error"]
+    assert "The AI model is temporarily exhausted" in response.get_json()["error"]
     
     # Valida que o answer da rodada 3 voltou a ser NULL (ou seja, houve o rollback)
     rnd3 = query_db("SELECT * FROM rounds WHERE conference_id = ? AND round_number = 3", (conf_id,), one=True)
@@ -407,7 +407,7 @@ def test_submit_answer_gemini_failure_rollbacks_db(mock_gemini, authed_client):
     )
     
     assert response.status_code == 500
-    assert "Gemini API Timeout" in response.get_json()["error"]
+    assert "The AI model is temporarily exhausted" in response.get_json()["error"]
     
     # Valida que o answer da rodada 1 voltou a ser NULL (ou seja, houve o rollback)
     rnd1 = query_db("SELECT * FROM rounds WHERE conference_id = ? AND round_number = 1", (conf_id,), one=True)

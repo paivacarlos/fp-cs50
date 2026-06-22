@@ -149,3 +149,68 @@ def test_generate_chronicle(mock_get_image, mock_client):
     assert config.response_mime_type == "application/json"
     assert config.response_schema.__name__ == "ChronicleResponse"
 
+
+def test_mock_mode_active_no_api_key_needed():
+    """Testa se com MOCK_GEMINI=true o modulo e carregado sem erro mesmo sem GEMINI_API_KEY."""
+    with patch.dict(os.environ, {"MOCK_GEMINI": "true"}, clear=True):
+        import services.gemini
+        # Não deve levantar ValueError no reload
+        importlib.reload(services.gemini)
+
+
+def test_generate_first_question_mock_mode():
+    """Testa se generate_first_question no Modo Simulado retorna a questao mockada imediatamente."""
+    with patch.dict(os.environ, {"MOCK_GEMINI": "true"}, clear=True):
+        import services.gemini
+        importlib.reload(services.gemini)
+        
+        # Chama a funcao (nao deve fazer chamadas de API, portanto nao precisa mockar o client do SDK)
+        res = services.gemini.generate_first_question("some_image.png", "A generic context")
+        assert "defensive transitions" in res
+        assert "Coach" in res
+
+
+def test_generate_next_question_mock_mode():
+    """Testa se generate_next_question no Modo Simulado retorna as questoes subsequentes esperadas."""
+    with patch.dict(os.environ, {"MOCK_GEMINI": "true"}, clear=True):
+        import services.gemini
+        importlib.reload(services.gemini)
+        
+        # Rodada 2 (historico de tamanho 1)
+        res1 = services.gemini.generate_next_question("some_image.png", "Context", [{"question": "Q1", "answer": "A1"}])
+        assert "midfield was frequently bypassed" in res1
+        
+        # Rodada 3 (historico de tamanho 2)
+        res2 = services.gemini.generate_next_question("some_image.png", "Context", [
+            {"question": "Q1", "answer": "A1"},
+            {"question": "Q2", "answer": "A2"}
+        ])
+        assert "roster rotations" in res2
+
+
+def test_generate_chronicle_mock_mode():
+    """Testa se generate_chronicle no Modo Simulado retorna a cronica estruturada estatica."""
+    with patch.dict(os.environ, {"MOCK_GEMINI": "true"}, clear=True):
+        import services.gemini
+        importlib.reload(services.gemini)
+        
+        res = services.gemini.generate_chronicle("some_image.png", "Context", [])
+        assert isinstance(res, dict)
+        assert "headline" in res
+        assert "chronicle" in res
+        assert "TACTICAL REVOLUTION" in res["headline"]
+        assert "post-match press conference" in res["chronicle"]
+
+
+# Restaura o estado original do modulo apos os testes que alteraram as variaveis globais
+@pytest.fixture(autouse=True)
+def cleanup_gemini_module():
+    yield
+    # Limpa as variaveis de ambiente de teste para nao interferirem em outros testes
+    os.environ["GEMINI_API_KEY"] = "fake-test-key-123456"
+    if "MOCK_GEMINI" in os.environ:
+        del os.environ["MOCK_GEMINI"]
+    import services.gemini
+    importlib.reload(services.gemini)
+
+

@@ -36,7 +36,6 @@ def start_conference():
 
     local_path = screenshot_path.lstrip("/")
 
-    # 4. Invocar a API do Gemini
     try:
         question = generate_first_question(local_path, initial_context)
     except Exception as e:
@@ -46,9 +45,7 @@ def start_conference():
                 os.remove(local_path)
             except Exception:
                 pass
-        return jsonify({"error": f"Failed to generate first question: {str(e)}"}), 500
-
-    # 5. Persistir no banco de dados (conferences e rounds) em uma única transação
+        return jsonify({"error": "The AI model is temporarily exhausted or unavailable (rate limit reached). Please wait a moment and try again."}), 500
     user_id = session["user_id"]
     try:
         with get_db() as conn:
@@ -162,7 +159,7 @@ def submit_answer():
                     (active_round["id"],)
                 )
                 conn.commit()
-            return jsonify({"error": f"Failed to generate next question: {str(e)}"}), 500
+            return jsonify({"error": "The AI model is temporarily exhausted or unavailable (rate limit reached). Please wait a moment and try again."}), 500
             
         # Salvar a nova rodada com a pergunta gerada
         next_round_number = active_round_number + 1
@@ -206,7 +203,7 @@ def submit_answer():
                     (active_round["id"],)
                 )
                 conn.commit()
-            return jsonify({"error": f"Failed to generate chronicle: {str(e)}"}), 500
+            return jsonify({"error": "The AI model is temporarily exhausted or unavailable (rate limit reached). Please wait a moment and try again."}), 500
             
         # Salvar a manchete e a crônica no banco de dados
         try:

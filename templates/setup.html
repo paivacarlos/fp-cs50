@@ -80,6 +80,14 @@
 {% block card_tagline %}Upload your match screenshot and set the initial context{% endblock %}
 
 {% block content %}
+<!-- Client-side Error Alert Box -->
+<div id="error-alert" class="flash-message" style="display: none; margin-bottom: 15px; position: relative; z-index: 10;">
+    <svg style="width: 16px; height: 16px; fill: currentColor; flex-shrink: 0;" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+    </svg>
+    <span id="error-alert-text"></span>
+</div>
+
 <div id="setup-container">
     <form id="setup-form" method="POST" action="/api/conference/start" enctype="multipart/form-data">
         <!-- Game Screenshot Input -->
@@ -243,9 +251,26 @@
         }
     });
 
+    // Error Alert Box Helpers
+    const errorAlert = document.getElementById('error-alert');
+    const errorAlertText = document.getElementById('error-alert-text');
+
+    function showError(message) {
+        errorAlertText.textContent = message;
+        errorAlert.style.display = 'flex';
+        // Scroll smoothly to make error visible
+        errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function hideError() {
+        errorAlert.style.display = 'none';
+        errorAlertText.textContent = '';
+    }
+
     // Intercept form submission to start press conference via API
     setupForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        hideError();
         
         const submitBtn = setupForm.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
@@ -284,7 +309,7 @@
             pressRoomContainer.style.display = 'block';
             
         } catch (error) {
-            alert(error.message);
+            showError(error.message);
             submitBtn.disabled = false;
             submitBtn.classList.remove('btn-loading');
             submitBtn.textContent = 'Take the Stage';
@@ -294,6 +319,7 @@
     // Handle coach answer submission to advance rounds
     answerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        hideError();
         
         const submitBtn = document.getElementById('submit-answer-btn');
         submitBtn.disabled = true;
@@ -349,7 +375,7 @@
             submitBtn.textContent = 'Submit Answer';
             
         } catch (error) {
-            alert(error.message);
+            showError(error.message);
             submitBtn.disabled = false;
             submitBtn.classList.remove('btn-loading');
             submitBtn.textContent = 'Submit Answer';

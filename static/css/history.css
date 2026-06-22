@@ -3,7 +3,7 @@
     max-height: 380px;
     overflow-y: auto;
     padding-right: 6px;
-    margin-bottom: 10px;
+    margin-bottom: 25px;
     position: relative;
     z-index: 1;
 }
@@ -62,7 +62,7 @@
     padding: 2px 2px 10px 2px;
 }
 
-/* Glassmorphism History Card */
+/* Glassmorphism History Card (Styled as Link) */
 .history-card {
     display: flex;
     gap: 14px;
@@ -71,6 +71,8 @@
     border-radius: 14px;
     padding: 12px;
     cursor: pointer;
+    text-decoration: none; /* Task 7.1.4 */
+    color: inherit;        /* Task 7.1.4 */
     transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     position: relative;
@@ -104,6 +106,8 @@
     background: rgba(31, 41, 55, 0.7);
     border-color: transparent;
     box-shadow: 0 8px 24px rgba(99, 102, 241, 0.25);
+    color: inherit;
+    text-decoration: none;
 }
 
 .history-card:hover::before {
@@ -217,19 +221,30 @@
     transform: translateX(4px);
 }
 
-/* Back Link custom hover style */
+/* Back Link styled as a Premium Button - Task 7.2.1 */
 .back-link {
-    color: #818cf8;
+    display: inline-block;
+    padding: 10px 22px;
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: white !important;
     text-decoration: none;
     font-size: 13px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: inline-block;
+    font-weight: 700;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    border: none;
 }
 
 .back-link:hover {
-    color: #c7d2fe;
-    transform: translateX(-3px);
+    color: white !important;
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.55);
+}
+
+.back-link:active {
+    transform: translateY(0);
 }
 
 /* Keyframes Animations */
@@ -252,265 +267,5 @@
     50% {
         transform: scale(1.05);
         opacity: 0.6;
-    }
-}
-
-/* ========================================== */
-/* Retrospective Modal Styling (Glassmorphism) */
-/* ========================================== */
-
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(11, 15, 25, 0.75);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 20px;
-    box-sizing: border-box;
-    animation: fadeInOverlay 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.modal-content {
-    background: rgba(17, 24, 39, 0.95);
-    border: 1px solid var(--border-color);
-    border-radius: 20px;
-    padding: 25px 28px;
-    width: 100%;
-    max-width: 500px;
-    max-height: 85vh;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6),
-                inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    position: relative;
-    box-sizing: border-box;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    animation: scaleInContent 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-
-/* Override global button properties for close-btn */
-.modal-content .close-btn {
-    width: auto;
-    padding: 0;
-    background: none;
-    border: none;
-    font-size: 28px;
-    color: var(--text-secondary);
-    cursor: pointer;
-    box-shadow: none;
-    margin: 0;
-    margin-top: -6px;
-    line-height: 1;
-    transition: color 0.2s ease, transform 0.2s ease;
-    font-family: Arial, sans-serif;
-}
-
-.modal-content .close-btn:hover {
-    color: var(--text-primary);
-    transform: scale(1.15);
-    background: none;
-    box-shadow: none;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    padding-bottom: 12px;
-}
-
-.modal-header h3 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--text-primary);
-    letter-spacing: -0.3px;
-}
-
-.modal-body {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    overflow-y: auto;
-    padding-right: 4px;
-    flex-grow: 1;
-}
-
-/* Custom Scrollbar for Modal Body */
-.modal-body::-webkit-scrollbar {
-    width: 5px;
-}
-.modal-body::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.01);
-}
-.modal-body::-webkit-scrollbar-thumb {
-    background: rgba(99, 102, 241, 0.25);
-    border-radius: 10px;
-}
-
-/* Sections inside modal */
-.retro-section {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.section-title {
-    margin: 0;
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-    color: #818cf8;
-    letter-spacing: 1.2px;
-    border-left: 2px solid var(--accent-glow);
-    padding-left: 8px;
-}
-
-/* Transcript container & messages */
-.chat-transcript {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    max-height: 200px;
-    overflow-y: auto;
-    padding: 12px 14px;
-    background: rgba(0, 0, 0, 0.25);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.04);
-}
-
-.chat-transcript::-webkit-scrollbar {
-    width: 4px;
-}
-.chat-transcript::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-}
-
-.chat-bubble {
-    max-width: 85%;
-    padding: 10px 12px;
-    font-size: 12px;
-    line-height: 1.5;
-    position: relative;
-    box-sizing: border-box;
-}
-
-/* Reporter (Journalist) bubble on the left */
-.chat-bubble.reporter {
-    align-self: flex-start;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 12px 12px 12px 2px;
-    color: var(--text-primary);
-}
-
-/* Coach bubble on the right */
-.chat-bubble.coach {
-    align-self: flex-end;
-    background: rgba(99, 102, 241, 0.12);
-    border: 1px solid rgba(99, 102, 241, 0.25);
-    border-radius: 12px 12px 2px 12px;
-    color: var(--text-primary);
-}
-
-.bubble-speaker {
-    display: block;
-    font-size: 8.5px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
-}
-
-.chat-bubble.reporter .bubble-speaker {
-    color: #9ca3af;
-}
-
-.chat-bubble.coach .bubble-speaker {
-    color: #818cf8;
-}
-
-/* Newspaper content container inside Modal */
-.newspaper-content {
-    background: #f4ebd0; /* Vintage paper color */
-    background-image: radial-gradient(rgba(0, 0, 0, 0.015) 1px, transparent 0);
-    background-size: 6px 6px;
-    color: #2b2b2b;
-    padding: 16px 20px;
-    border-radius: 10px;
-    border: 1px solid #d3c4a0;
-    font-family: 'Playfair Display', 'Georgia', serif;
-    box-shadow: inset 0 0 20px rgba(43, 35, 20, 0.05);
-}
-
-.newspaper-headline {
-    font-size: 16px;
-    font-weight: 850;
-    text-align: center;
-    line-height: 1.3;
-    margin: 5px 0 12px 0;
-    color: #111111;
-    text-transform: uppercase;
-    letter-spacing: -0.2px;
-    border-bottom: 1px solid rgba(43, 35, 20, 0.15);
-    padding-bottom: 8px;
-}
-
-.newspaper-chronicle {
-    font-size: 12.5px;
-    line-height: 1.55;
-    text-align: justify;
-    margin: 0;
-}
-
-.newspaper-chronicle p {
-    margin-top: 0;
-    margin-bottom: 8px;
-    text-indent: 14px;
-}
-
-.newspaper-chronicle p:first-of-type {
-    text-indent: 0;
-}
-
-.newspaper-chronicle p:first-of-type::first-letter {
-    float: left;
-    font-size: 2.2rem;
-    line-height: 0.8;
-    margin-top: 2px;
-    margin-right: 6px;
-    font-weight: 900;
-    color: #111;
-}
-
-/* Keyframe Animations for Modal */
-@keyframes fadeInOverlay {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes scaleInContent {
-    from {
-        opacity: 0;
-        transform: scale(0.95) translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
     }
 }
