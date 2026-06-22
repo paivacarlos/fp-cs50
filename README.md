@@ -1,5 +1,16 @@
 # PressConference EA
 
+<p align="center">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/c/c8/Harvard_University_shield.svg" alt="Harvard Shield" width="70" height="85">
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://cs50.harvard.edu/x/2024/assets/images/cs50.png" alt="CS50 Logo" width="85" height="85">
+</p>
+
+<h3 align="center">CS50's Introduction to Computer Science</h3>
+<h4 align="center">Harvard University - Final Project</h4>
+
+---
+
 PressConference EA is a web application focused on engagement and sports storytelling for **EA FC 26** players. The system transforms the stats from a post-match screenshot and a brief player comment into an interactive, immersive 3-round press conference, where the AI acts as the reporter and the user as the coach. At the end, the app generates a stylized sports article covering the conference.
 
 ## Project Structure
@@ -78,6 +89,25 @@ Before running the application for the first time, you must create and initializ
 python -m services.db
 ```
 This will automatically generate the `conference_data.db` SQLite file and execute [schema.sql](schema.sql) to create all required tables and indexes. If you ever need to reset your database to a clean slate, you can simply delete the `conference_data.db` file and run this command again.
+
+### 7. Run the Application
+
+Once the database is initialized, start the Flask development server:
+```bash
+python -m flask run
+```
+By default, the server runs on `http://127.0.0.1:5000/`. Open this URL in your web browser to access the application.
+
+---
+
+## 💡 Quick Evaluation Tip (Mock Mode)
+
+To make evaluation simple and avoid requiring a live Google Gemini API key:
+1. Open your `.env` file (copied from `.env.example`).
+2. Set `MOCK_GEMINI=true`.
+3. Run the application normally. With this flag set, the application will run in **Mock Mode**, providing pre-configured questions and sports articles instantaneously without making any external network requests or requiring a valid `GEMINI_API_KEY`.
+
+---
 
 ## Database Usage & Helpers
 
