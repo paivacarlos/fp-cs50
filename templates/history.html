@@ -73,5 +73,134 @@
             </div>
         </div>
     </div>
-</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.history-card');
+    const modal = document.getElementById('retro-modal');
+    const closeBtn = document.getElementById('close-modal-btn');
+    const chatTranscript = document.getElementById('modal-chat-transcript');
+    const headlineEl = document.getElementById('modal-headline');
+    const chronicleEl = document.getElementById('modal-chronicle');
+
+    // Open Modal
+    function openModal() {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Prevent main page scrolling when modal is open
+    }
+
+    // Close Modal
+    function closeModal() {
+        modal.style.display = 'none';
+        document.body.style.overflow = ''; // Restore main page scrolling
+        // Clear previous content
+        chatTranscript.innerHTML = '';
+        headlineEl.textContent = '';
+        chronicleEl.innerHTML = '';
+    }
+
+    // Attach click events to all history cards
+    cards.forEach(card => {
+        card.addEventListener('click', async () => {
+            const conferenceId = card.dataset.conferenceId;
+            if (!conferenceId) return;
+
+            // Visual loading feedback on the card
+            card.style.opacity = '0.7';
+            card.style.pointerEvents = 'none';
+
+            try {
+                const response = await fetch(`/api/conference/${conferenceId}/details`);
+                if (!response.ok) {
+                    throw new Error('Failed to load conference details');
+                }
+                const data = await response.json();
+                
+                // Populate Q&A Chat Transcript
+                if (data.rounds && data.rounds.length > 0) {
+                    data.rounds.forEach(round => {
+                        // Journalist Question Bubble
+                        const qBubble = document.createElement('div');
+                        qBubble.className = 'chat-bubble reporter';
+                        qBubble.innerHTML = `
+                            <span class="bubble-speaker">Jornalista</span>
+                            <span class="bubble-text">${escapeHtml(round.question)}</span>
+                        `;
+                        chatTranscript.appendChild(qBubble);
+
+                        // Coach Answer Bubble (only if answered)
+                        if (round.answer) {
+                            const aBubble = document.createElement('div');
+                            aBubble.className = 'chat-bubble coach';
+                            aBubble.innerHTML = `
+                                <span class="bubble-speaker">Você</span>
+                                <span class="bubble-text">${escapeHtml(round.answer)}</span>
+                            `;
+                            chatTranscript.appendChild(aBubble);
+                        }
+                    });
+                } else {
+                    chatTranscript.innerHTML = '<p style="font-size:12px; color:var(--text-secondary); text-align:center; font-style:italic;">Nenhuma rodada gravada para esta coletiva.</p>';
+                }
+
+                // Populate Newspaper Chronicle
+                if (data.conference) {
+                    headlineEl.textContent = data.conference.headline || 'Sem Manchete';
+                    
+                    if (data.conference.chronicle) {
+                        const paragraphs = data.conference.chronicle.split('\n');
+                        paragraphs.forEach(pText => {
+                            const cleaned = pText.trim();
+                            if (cleaned) {
+                                const p = document.createElement('p');
+                                p.textContent = cleaned;
+                                chronicleEl.appendChild(p);
+                            }
+                        });
+                    } else {
+                        chronicleEl.innerHTML = '<p class="empty-chronicle">Nenhum detalhe da crônica disponível.</p>';
+                    }
+                }
+
+                openModal();
+            } catch (error) {
+                alert('Erro ao carregar detalhes: ' + error.message);
+            } finally {
+                card.style.opacity = '';
+                card.style.pointerEvents = '';
+            }
+        });
+    });
+
+    // Close on button click
+    closeBtn.addEventListener('click', closeModal);
+
+    // Close on clicking overlay outside the content box
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Close on pressing Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.style.display === 'flex') {
+            closeModal();
+        }
+    });
+
+    // Simple HTML escaping helper to prevent XSS
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+});
+</script>
 {% endblock %}
