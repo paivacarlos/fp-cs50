@@ -1,9 +1,9 @@
 # PressConference EA
 
 <p align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/c/c8/Harvard_University_shield.svg" alt="Harvard Shield" width="70" height="85">
+  <img src="static/images/harvard_shield.png" alt="Harvard Shield" width="75" height="85">
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://cs50.harvard.edu/x/2024/assets/images/cs50.png" alt="CS50 Logo" width="85" height="85">
+  <img src="static/images/cs50_logo.png" alt="CS50 Logo" width="85" height="85">
 </p>
 
 <h3 align="center">CS50's Introduction to Computer Science</h3>
