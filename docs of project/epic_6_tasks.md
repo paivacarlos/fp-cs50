@@ -23,7 +23,7 @@ This document breaks down the tasks of Epic 6 into atomized steps to track imple
   - Um link de retorno (ex: "← Voltar ao Setup") no topo ou rodapé de [templates/history.html](../templates/history.html).
 
 ### Fase 3: Modal de Retrospectiva & Interatividade (JS Layer)
-- [ ] **Task 6.3.1:** Desenhar a marcação HTML do Modal de Retrospectiva (`#retro-modal`) em `history.html` (contendo botão de fechar, área para transcrição das perguntas/respostas e área para renderizar o jornal).
+- [x] **Task 6.3.1:** Desenhar a marcação HTML do Modal de Retrospectiva (`#retro-modal`) em `history.html` (contendo botão de fechar, área para transcrição das perguntas/respostas e área para renderizar o jornal).
 - [ ] **Task 6.3.2:** Estilizar o modal (`.modal-overlay`, `.modal-content`, bolhas de chat de Q&A) em [static/css/history.css](../static/css/history.css), configurando um overlay translúcido e animações suaves de entrada (fade-in / scale).
 - [ ] **Task 6.3.3:** Implementar a lógica JavaScript em `history.html` para:
   - Adicionar ouvintes de evento de clique em cada `.history-card`.

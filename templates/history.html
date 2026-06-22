@@ -46,4 +46,32 @@
 <div class="footer-links">
     <a href="{{ url_for('main.setup') }}" class="back-link">← Back to Setup</a>
 </div>
+
+<!-- Retrospective Modal -->
+<div id="retro-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Retrospectiva</h3>
+            <button id="close-modal-btn" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <!-- Q&A Transcript -->
+            <div class="retro-section chat-section">
+                <h4 class="section-title">Coletiva de Imprensa</h4>
+                <div id="modal-chat-transcript" class="chat-transcript">
+                    <!-- Dynamic Q&A bubbles will be injected here by JS -->
+                </div>
+            </div>
+            
+            <!-- Newspaper Chronicle -->
+            <div class="retro-section newspaper-section">
+                <h4 class="section-title">Edição do Jornal</h4>
+                <div id="modal-newspaper-content" class="newspaper-content">
+                    <h2 id="modal-headline" class="newspaper-headline"></h2>
+                    <p id="modal-chronicle" class="newspaper-chronicle"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
