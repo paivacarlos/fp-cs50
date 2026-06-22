@@ -135,7 +135,9 @@
     </form>
 </div>
 
-<div class="footer-links">
+<div class="footer-links" style="gap: 15px; align-items: center;">
+    <a href="{{ url_for('main.history') }}" class="history-link">View History / Ver Histórico</a>
+    <span style="color: rgba(255, 255, 255, 0.15);">|</span>
     <a href="{{ url_for('auth.logout') }}" class="logout-link">Logout / Sair</a>
 </div>
 {% endblock %}
