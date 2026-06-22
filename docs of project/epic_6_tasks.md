@@ -15,8 +15,8 @@ This document breaks down the tasks of Epic 6 into atomized steps to track imple
 - [x] **Task 6.1.5:** Escrever testes de integração em [tests/test_api.py](../tests/test_api.py) cobrindo o endpoint de detalhes: sucesso (retorno correto de JSON estruturado), erro 404 (conferência não existente) e erro 403 (acesso não autorizado a conferências de outros usuários).
 
 ### Fase 2: Interface do Histórico & Navegação (Frontend Layer)
-- [ ] **Task 6.2.1:** Criar o novo template `templates/history.html` herdando de [templates/base.html](../templates/base.html).
-- [ ] **Task 6.2.2:** Desenhar a marcação HTML em `history.html` contendo um grid ou linha do tempo exibindo cartões (`.history-card`) para cada conferência (com data formatada, manchete e miniatura do screenshot).
+- [x] **Task 6.2.1:** Criar o novo template `templates/history.html` herdando de [templates/base.html](../templates/base.html).
+- [x] **Task 6.2.2:** Desenhar a marcação HTML em `history.html` contendo um grid ou linha do tempo exibindo cartões (`.history-card`) para cada conferência (com data formatada, manchete e miniatura do screenshot).
 - [ ] **Task 6.2.3:** Criar a folha de estilo [static/css/history.css](../static/css/history.css) (ou atualizar a existente) aplicando design moderno nos cartões do histórico (glassmorphism, bordas com degradê e micro-animações de escala no hover).
 - [ ] **Task 6.2.4:** Atualizar a navegação global adicionando links cruzados:
   - Um link de acesso rápido ao histórico (ex: "Ver Histórico") no cabeçalho ou rodapé de [templates/setup.html](../templates/setup.html).

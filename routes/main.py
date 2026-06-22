@@ -23,7 +23,7 @@ def history():
     user_id = session["user_id"]
     with get_db() as conn:
         conferences = conn.execute(
-            "SELECT * FROM conferences WHERE user_id = ? AND headline IS NOT NULL AND chronicle IS NOT NULL ORDER BY created_at DESC",
+            "SELECT *, strftime('%d/%m/%Y', created_at) AS formatted_date FROM conferences WHERE user_id = ? AND headline IS NOT NULL AND chronicle IS NOT NULL ORDER BY created_at DESC",
             (user_id,)
         ).fetchall()
     return render_template("history.html", conferences=conferences)

@@ -2,6 +2,10 @@
 
 {% block title %}History - PressConference EA{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/history.css') }}">
+{% endblock %}
+
 {% block badge %}<span class="badge">History</span>{% endblock %}
 {% block card_title %}Conference History{% endblock %}
 {% block card_tagline %}View your past conferences and retrospectives{% endblock %}
@@ -9,19 +13,37 @@
 {% block content %}
 <div id="history-container">
     {% if not conferences %}
-        <div class="empty-state" style="text-align: center; padding: 40px 20px; color: var(--text-secondary, #9ca3af);">
-            <p style="font-size: 16px; margin: 0;">No past conferences found.</p>
+        <div class="empty-state">
+            <svg class="empty-icon" viewBox="0 0 24 24">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+            </svg>
+            <p>No past conferences found.</p>
         </div>
     {% else %}
-        <ul>
+        <div class="history-grid">
             {% for conference in conferences %}
-                <li>{{ conference.headline }}</li>
+                <div class="history-card" data-conference-id="{{ conference.id }}">
+                    <div class="card-thumbnail">
+                        <img src="{{ conference.screenshot_path }}" alt="Match Screenshot" loading="lazy">
+                        <span class="card-date">{{ conference.formatted_date or conference.created_at }}</span>
+                    </div>
+                    <div class="card-info">
+                        <h3 class="card-headline">{{ conference.headline }}</h3>
+                        <p class="card-context">{{ conference.initial_context }}</p>
+                        <div class="card-action">
+                            <span>Ver Detalhes</span>
+                            <svg viewBox="0 0 24 24" class="arrow-icon">
+                                <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     {% endif %}
 </div>
 
-<div class="footer-links" style="margin-top: 25px; text-align: center;">
-    <a href="{{ url_for('main.setup') }}" class="back-link" style="color: #818cf8; text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.3s ease;">← Back to Setup</a>
+<div class="footer-links">
+    <a href="{{ url_for('main.setup') }}" class="back-link">← Back to Setup</a>
 </div>
 {% endblock %}
