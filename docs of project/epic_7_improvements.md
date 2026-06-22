@@ -25,6 +25,7 @@ This document breaks down the tasks of Epic 7 into atomized steps to track imple
 - [x] **Task 7.3.4:** Implementar a leitura dinâmica do modelo através de `GEMINI_MODEL` (lido do `.env` com fallback) em [services/gemini.py](../services/gemini.py) e documentá-la no arquivo `.env.example`.
 - [x] **Task 7.3.5:** Criar o "Modo Simulado" (Mock Mode) em [services/gemini.py](../services/gemini.py) controlado por `MOCK_GEMINI=true` no `.env` para retornar perguntas e crônicas pré-definidas e realistas instantaneamente, eliminando riscos de queda ou cotas estouradas durante a gravação.
 - [x] **Task 7.3.6:** Escrever testes unitários em [tests/test_gemini.py](../tests/test_gemini.py) cobrindo tanto o comportamento da aplicação no Modo Simulado quanto no modo de chamada real à API.
+- [ ] **Task 7.3.7:** Restringir o campo de drag-and-drop no frontend (setup.html) para aceitar apenas um arquivo por vez, apresentando mensagem de erro amigável via #error-alert.
 
 ### Fase 4: Validação & Garantia de Qualidade
 - [x] **Task 7.4.1:** Executar a suíte de testes do projeto via `pytest` para garantir a integridade das rotas e das regras de negócio após as refatorações.

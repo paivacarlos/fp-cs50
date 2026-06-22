@@ -60,10 +60,6 @@ def test_setup_page_invalid_upload_alert(live_server, page):
     page.click('button[type="submit"]')
     expect(page).to_have_url(f"{live_server}/setup")
     
-    # Captura e aceita o alerta que o JS deve disparar na tela
-    dialog_messages = []
-    page.on("dialog", lambda dialog: [dialog_messages.append(dialog.message), dialog.accept()])
-    
     # Cria um arquivo de texto simulando um tipo de arquivo inválido
     invalid_file_path = "tests/test_temp_invalid.txt"
     with open(invalid_file_path, "w") as f:
@@ -73,9 +69,9 @@ def test_setup_page_invalid_upload_alert(live_server, page):
         # Tenta enviar o arquivo inválido
         page.set_input_files("#screenshot", invalid_file_path)
         
-        # Verifica se o alerta foi exibido com a mensagem correta
-        assert len(dialog_messages) > 0
-        assert "Please upload a valid image file" in dialog_messages[0]
+        # Verifica se o erro foi exibido com a mensagem correta no alert customizado
+        expect(page.locator("#error-alert")).to_be_visible()
+        expect(page.locator("#error-alert")).to_contain_text("Please upload a valid image file")
         
         # Garante que a pré-visualização continua oculta
         expect(page.locator("#preview-container")).not_to_be_visible()
@@ -84,3 +80,34 @@ def test_setup_page_invalid_upload_alert(live_server, page):
         # Remove o arquivo temporário
         if os.path.exists(invalid_file_path):
             os.remove(invalid_file_path)
+
+def test_setup_page_multiple_files_alert(live_server, page):
+    # Logar com o usuário já cadastrado
+    page.goto(f"{live_server}/login")
+    page.fill('input[name="username"]', "ui_tester_coach")
+    page.fill('input[name="password"]', "securepassword123")
+    page.click('button[type="submit"]')
+    expect(page).to_have_url(f"{live_server}/setup")
+    
+    # Dispara um evento de drop com múltiplos arquivos usando JS no contexto do navegador
+    page.evaluate("""() => {
+        const dropZone = document.getElementById('drop-zone');
+        const dt = new DataTransfer();
+        const file1 = new File(["dummy1"], "file1.png", { type: "image/png" });
+        const file2 = new File(["dummy2"], "file2.png", { type: "image/png" });
+        dt.items.add(file1);
+        dt.items.add(file2);
+        
+        const dropEvent = new DragEvent('drop', {
+            bubbles: true,
+            cancelable: true,
+            dataTransfer: dt
+        });
+        dropZone.dispatchEvent(dropEvent);
+    }""")
+    
+    # Verifica se a mensagem de erro apropriada apareceu e se a pré-visualização está oculta
+    expect(page.locator("#error-alert")).to_be_visible()
+    expect(page.locator("#error-alert")).to_contain_text("Only one screenshot is allowed")
+    expect(page.locator("#preview-container")).not_to_be_visible()
+

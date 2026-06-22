@@ -189,14 +189,29 @@
     dropZone.addEventListener('drop', (e) => {
         const dt = e.dataTransfer;
         const files = dt.files;
+        
+        if (files.length > 1) {
+            showError('Only one screenshot is allowed. Please drag a single file.');
+            fileInput.value = '';
+            previewContainer.style.display = 'none';
+            return;
+        }
+        
         fileInput.files = files; // Assign files to file input
         handleFiles(files);
     });
     
     function handleFiles(files) {
+        if (files.length > 1) {
+            showError('Only one screenshot is allowed. Please drag a single file.');
+            fileInput.value = '';
+            previewContainer.style.display = 'none';
+            return;
+        }
         if (files.length > 0) {
             const file = files[0];
             if (file.type.startsWith('image/')) {
+                hideError();
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     previewImage.src = e.target.result;
@@ -204,7 +219,7 @@
                 };
                 reader.readAsDataURL(file);
             } else {
-                alert('Please upload a valid image file (PNG, JPG, JPEG, GIF).');
+                showError('Please upload a valid image file (PNG, JPG, JPEG, GIF).');
                 fileInput.value = '';
                 previewContainer.style.display = 'none';
             }
