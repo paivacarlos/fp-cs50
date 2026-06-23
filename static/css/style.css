@@ -234,10 +234,16 @@ button:active {
 .footer-links {
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 15px;
     margin-top: 20px;
     font-size: 13px;
     position: relative;
     z-index: 1;
+}
+
+.footer-links span {
+    color: rgba(255, 255, 255, 0.15);
 }
 
 .footer-links a {

@@ -226,6 +226,11 @@ body {
 
 /* Newspaper Action Buttons / Navigation */
 .newspaper-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
     margin-top: 30px;
     text-align: center;
     border-top: 1px dashed #d3c4a0;

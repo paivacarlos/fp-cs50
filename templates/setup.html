@@ -73,17 +73,16 @@
     <form id="answer-form">
         <div class="form-group">
             <label for="coach_answer">Your Answer</label>
-            <textarea id="coach_answer" required placeholder="Type your response to the reporter..." maxlength="300"
-                style="width:100%; height:100px; padding:12px 14px; background:rgba(31,41,55,0.6); border:1px solid rgba(255,255,255,0.1); border-radius:10px; box-sizing:border-box; color:white; font-size:14px; transition:all 0.3s ease; font-family:inherit; resize:none;"></textarea>
+            <textarea id="coach_answer" required placeholder="Type your response to the reporter..." maxlength="300"></textarea>
             <span id="answer-char-counter" class="char-counter">300 characters remaining</span>
         </div>
         <button type="submit" id="submit-answer-btn">Submit Answer</button>
     </form>
 </div>
 
-<div class="footer-links" style="gap: 15px; align-items: center;">
+<div class="footer-links">
     <a href="{{ url_for('main.history') }}" class="history-link">View History</a>
-    <span style="color: rgba(255, 255, 255, 0.15);">|</span>
+    <span>|</span>
     <a href="{{ url_for('auth.logout') }}" class="logout-link">Logout</a>
 </div>
 {% endblock %}
