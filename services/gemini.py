@@ -52,10 +52,12 @@ def generate_first_question(image_path: str, context: str) -> str:
 
     img_part = get_image_part(image_path)
     
-    # Prompt instruindo a IA a agir como repórter
+    # Prompt instruindo a IA a agir como repórter e validar a imagem
     prompt = (
         "You are a tough, professional sports reporter in a press conference. "
-        "Analyze this EA FC post-match screenshot and the following notes from the coach:\n"
+        "First, verify if the attached image is a gameplay or post-match stats screenshot of a football game (like EA FC). "
+        "If the image is completely unrelated to a football game (such as a tree, a person, an animal, a generic object, or a landscape), you must reply with exactly: 'ERROR: INVALID_IMAGE'. "
+        "Otherwise, if it is a valid game screenshot, analyze this EA FC post-match screenshot and the following notes from the coach:\n"
         f"'{context}'\n\n"
         "Ask an engaging, sharp, and realistic first question to the coach about the game. "
         "The question must be direct and in character. Do not include any intro, outro, or meta-commentary."

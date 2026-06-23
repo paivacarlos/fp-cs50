@@ -46,6 +46,16 @@ def start_conference():
             except Exception:
                 pass
         return jsonify({"error": "The AI model is temporarily exhausted or unavailable (rate limit reached). Please wait a moment and try again."}), 500
+
+    if "ERROR: INVALID_IMAGE" in question:
+        # Cleanup do arquivo físico em caso de imagem inválida
+        if os.path.exists(local_path):
+            try:
+                os.remove(local_path)
+            except Exception:
+                pass
+        return jsonify({"error": "The uploaded screenshot is invalid. Please upload a valid gameplay or match stats image."}), 400
+
     user_id = session["user_id"]
     try:
         with get_db() as conn:

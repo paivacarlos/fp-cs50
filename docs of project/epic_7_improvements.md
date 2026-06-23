@@ -30,3 +30,8 @@ This document breaks down the tasks of Epic 7 into atomized steps to track imple
 ### Fase 4: Validação & Garantia de Qualidade
 - [x] **Task 7.4.1:** Executar a suíte de testes do projeto via `pytest` para garantir a integridade das rotas e das regras de negócio após as refatorações.
 - [x] **Task 7.4.2:** Atualizar os testes em [tests/test_api.py](../tests/test_api.py) para validar que os endpoints retornam as mensagens amigáveis de erro esperadas.
+
+### Fase 5: Verificação de Validade da Imagem (Guardrails contra Imagens Inválidas)
+- [ ] **Task 7.5.1:** Modificar o prompt do Gemini em `generate_first_question` em [services/gemini.py](../services/gemini.py) para validar se a imagem enviada é um print de jogo/estatísticas de futebol (como EA FC). Caso contrário, retornar a resposta de erro `"ERROR: INVALID_IMAGE"`.
+- [ ] **Task 7.5.2:** Atualizar a lógica do endpoint `/api/conference/start` em [routes/api.py](../routes/api.py) para identificar a resposta `"ERROR: INVALID_IMAGE"` e retornar um erro `400 Bad Request` com uma mensagem amigável, deletando a imagem do disco.
+- [ ] **Task 7.5.3:** Adicionar um teste unitário em [tests/test_api.py](../tests/test_api.py) para validar que o envio de imagens inválidas simula o comportamento de erro e retorna `400` corretamente com a limpeza da imagem.

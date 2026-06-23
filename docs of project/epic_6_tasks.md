@@ -7,33 +7,33 @@ This document breaks down the tasks of Epic 6 into atomized steps to track imple
 
 ## Technical Tasks
 
-### Fase 1: Backend & API (Database & Routes Layer)
-- [x] **Task 6.1.1:** Criar a rota `GET /history` em [routes/main.py](../routes/main.py) protegida por `@login_required` que renderiza o template `templates/history.html` com uma lista vazia.
-- [x] **Task 6.1.2:** Implementar a query no banco de dados na rota `GET /history` para recuperar apenas as conferências finalizadas (`headline IS NOT NULL AND chronicle IS NOT NULL`) associadas ao `user_id` da sessão, ordenadas por `created_at DESC`, e passá-las ao template.
-- [x] **Task 6.1.3:** Escrever testes de integração em [tests/test_api.py](../tests/test_api.py) para garantir que o acesso à rota `/history` redirecione usuários não autorizados para `/login` e retorne `200 OK` para usuários logados.
-- [x] **Task 6.1.4:** Criar o novo endpoint `GET /api/conference/<int:conference_id>/details` em [routes/api.py](../routes/api.py) protegido por `@login_required` que valida a propriedade da conferência, busca os dados da conferência e todas as rodadas (`rounds`) associadas, e retorna em formato JSON.
-- [x] **Task 6.1.5:** Escrever testes de integração em [tests/test_api.py](../tests/test_api.py) cobrindo o endpoint de detalhes: sucesso (retorno correto de JSON estruturado), erro 404 (conferência não existente) e erro 403 (acesso não autorizado a conferências de outros usuários).
+### Phase 1: Backend & API (Database & Routes Layer)
+- [x] **Task 6.1.1:** Create the `GET /history` route in [routes/main.py](../routes/main.py) protected by `@login_required` that renders the `templates/history.html` template.
+- [x] **Task 6.1.2:** Implement the database query in the `GET /history` route to retrieve only the completed conferences (`headline IS NOT NULL AND chronicle IS NOT NULL`) associated with the session's `user_id`, ordered by `created_at DESC`, and pass them to the template.
+- [x] **Task 6.1.3:** Write integration tests in [tests/test_api.py](../tests/test_api.py) to ensure that accessing the `/history` route redirects unauthorized users to `/login` and returns `200 OK` for logged-in users.
+- [x] **Task 6.1.4:** Create the new endpoint `GET /api/conference/<int:conference_id>/details` in [routes/api.py](../routes/api.py) protected by `@login_required` that validates conference ownership, fetches the conference data and all associated `rounds`, and returns them in JSON format.
+- [x] **Task 6.1.5:** Write integration tests in [tests/test_api.py](../tests/test_api.py) covering the details endpoint: success (correct return of structured JSON), 404 error (non-existent conference), and 403 error (unauthorized access to other users' conferences).
 
-### Fase 2: Interface do Histórico & Navegação (Frontend Layer)
-- [x] **Task 6.2.1:** Criar o novo template `templates/history.html` herdando de [templates/base.html](../templates/base.html).
-- [x] **Task 6.2.2:** Desenhar a marcação HTML em `history.html` contendo um grid ou linha do tempo exibindo cartões (`.history-card`) para cada conferência (com data formatada, manchete e miniatura do screenshot).
-- [x] **Task 6.2.3:** Criar a folha de estilo [static/css/history.css](../static/css/history.css) (ou atualizar a existente) aplicando design moderno nos cartões do histórico (glassmorphism, bordas com degradê e micro-animações de escala no hover).
-- [x] **Task 6.2.4:** Atualizar a navegação global adicionando links cruzados:
-  - Um link de acesso rápido ao histórico (ex: "Ver Histórico") no cabeçalho ou rodapé de [templates/setup.html](../templates/setup.html).
-  - Um link de retorno (ex: "← Voltar ao Setup") no topo ou rodapé de [templates/history.html](../templates/history.html).
+### Phase 2: History Interface & Navigation (Frontend Layer)
+- [x] **Task 6.2.1:** Create the new template `templates/history.html` inheriting from [templates/base.html](../templates/base.html).
+- [x] **Task 6.2.2:** Design the HTML markup in `history.html` containing a grid or timeline displaying cards (`.history-card`) for each conference (with formatted date, headline, and screenshot thumbnail).
+- [x] **Task 6.2.3:** Create the stylesheet [static/css/history.css](../static/css/history.css) (or update the existing one) applying modern design to the history cards (glassmorphism, gradient borders, and scale micro-animations on hover).
+- [x] **Task 6.2.4:** Update global navigation by adding cross-links:
+  - A quick access link to history (e.g., "View History") in the header or footer of [templates/setup.html](../templates/setup.html).
+  - A return link (e.g., "← Back to Setup") in the header or footer of [templates/history.html](../templates/history.html).
 
-### Fase 3: Modal de Retrospectiva & Interatividade (JS Layer)
-- [x] **Task 6.3.1:** Desenhar a marcação HTML do Modal de Retrospectiva (`#retro-modal`) em `history.html` (contendo botão de fechar, área para transcrição das perguntas/respostas e área para renderizar o jornal).
-- [x] **Task 6.3.2:** Estilizar o modal (`.modal-overlay`, `.modal-content`, bolhas de chat de Q&A) em [static/css/history.css](../static/css/history.css), configurando um overlay translúcido e animações suaves de entrada (fade-in / scale).
-- [x] **Task 6.3.3:** Implementar a lógica JavaScript em `history.html` para:
-  - Adicionar ouvintes de evento de clique em cada `.history-card`.
-  - Fazer a requisição via `fetch()` para o endpoint `/api/conference/<id>/details`.
-  - Preencher dinamicamente a estrutura de chat (perguntas/respostas) e o layout de jornal dentro do modal.
-  - Exibir o modal e tratar as ações de fechamento (clique no botão "X", na área externa ou tecla Esc).
+### Phase 3: Retrospective Modal & Interactivity (JS Layer)
+- [x] **Task 6.3.1:** Design the HTML markup of the Retrospective Modal (`#retro-modal`) in `history.html` (containing a close button, area for Q&A transcript, and area to render the newspaper).
+- [x] **Task 6.3.2:** Style the modal (`.modal-overlay`, `.modal-content`, Q&A chat bubbles) in [static/css/history.css](../static/css/history.css), configuring a translucent overlay and smooth entrance animations (fade-in / scale).
+- [x] **Task 6.3.3:** Implement JavaScript logic in `history.html` to:
+  - Add click event listeners to each `.history-card`.
+  - Send a request via `fetch()` to the `/api/conference/<id>/details` endpoint.
+  - Dynamically populate the chat structure (questions/answers) and the newspaper layout inside the modal.
+  - Display the modal and handle close actions (clicking the "X" button, the external area, or pressing the Esc key).
 
-### Fase 4: Testes de Interface E2E do Projeto (UI Quality Assurance)
-- [ ] **Task 6.4.1:** Escrever o teste E2E do **Epic 5** com Playwright em [tests/test_ui.py](../tests/test_ui.py) simulando o fluxo de envio de respostas de um técnico até a finalização da Rodada 3 e o redirecionamento para o jornal, validando os elementos visíveis na página final.
-- [ ] **Task 6.4.2:** Escrever o teste E2E do **Epic 6** com Playwright em [tests/test_ui.py](../tests/test_ui.py) simulando o fluxo de navegação:
-  - Fazer login e ir para a rota `/history`.
-  - Clicar em um cartão de histórico e validar se o Modal de Retrospectiva abre corretamente.
-  - Verificar se a transcrição da conferência (perguntas e respostas) e a manchete estão legíveis dentro do modal.
+### Phase 4: Project E2E Interface Tests (UI Quality Assurance)
+- [ ] **Task 6.4.1:** Write the E2E test of **Epic 5** with Playwright in [tests/test_ui.py](../tests/test_ui.py) simulating a manager's flow submitting answers until completing Round 3 and verifying the redirect to the newspaper, validating visible elements on the final page.
+- [ ] **Task 6.4.2:** Write the E2E test of **Epic 6** with Playwright in [tests/test_ui.py](../tests/test_ui.py) simulating the navigation flow:
+  - Login and navigate to the `/history` route.
+  - Click on a history card and validate that the Retrospective Modal opens correctly.
+  - Verify that the conference transcript (questions and answers) and the headline are readable inside the modal.

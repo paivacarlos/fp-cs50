@@ -161,6 +161,34 @@ def test_start_conference_gemini_failure_cleans_file(mock_save_file, mock_gemini
         mock_remove.assert_called_once()
 
 
+@patch("routes.api.generate_first_question")
+@patch("routes.api.save_upload_file")
+def test_start_conference_invalid_image_guardrail(mock_save_file, mock_gemini, authed_client):
+    mock_save_file.return_value = "/static/uploads/mocked_filename.png"
+    mock_gemini.return_value = "ERROR: INVALID_IMAGE"
+    
+    with patch("os.path.exists", return_value=True) as mock_exists, \
+         patch("os.remove") as mock_remove:
+        
+        data = {
+            "screenshot": (io.BytesIO(b"fake_image"), "match.png"),
+            "initial_context": "Tough game"
+        }
+        
+        response = authed_client.post(
+            "/api/conference/start",
+            data=data,
+            content_type="multipart/form-data"
+        )
+        
+        assert response.status_code == 400
+        assert "The uploaded screenshot is invalid" in response.get_json()["error"]
+        
+        # Garante que tentou apagar o arquivo
+        mock_exists.assert_called()
+        mock_remove.assert_called_once()
+
+
 def test_submit_answer_requires_login(client):
     response = client.post("/api/conference/answer", json={"conference_id": 1, "answer": "Yes"})
     assert response.status_code == 302 # Redireciona para /login
