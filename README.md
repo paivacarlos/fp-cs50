@@ -13,6 +13,17 @@
 
 PressConference EA is a web application focused on engagement and sports storytelling for **EA FC 26** players. The system transforms the stats from a post-match screenshot and a brief player comment into an interactive, immersive 3-round press conference, where the AI acts as the reporter and the user as the coach. At the end, the app generates a stylized sports article covering the conference.
 
+## Technical Architecture & Design Decisions
+
+### 1. State Management (Gerenciamento de Estado)
+The application leverages Flask's cryptographically-signed client-side sessions (`flask.session`) to manage volatile user states (such as active login sessions and context tracking). By holding transient session identifiers securely on the client side, we avoid polluting the primary SQLite database with volatile or temporary session tables. This keeps the MVP lightweight, highly performant, and simple to manage.
+
+### 2. Post/Redirect/Get (PRG) Pattern
+To ensure a robust user experience, the application strictly adheres to the **Post/Redirect/Get (PRG)** design pattern for mutating operations (e.g., registration, logging in, logging out). After a successful write operation (POST request), the server responds with an HTTP `302 Redirect` to direct the browser to a clean GET route (like `/setup` or `/login`). This guards against accidental form resubmission and duplicated actions if the user refreshes their browser (via F5).
+
+### 3. QA & Test Automation (Isolamento em Memória/RAM)
+Our automated test suite is powered by `pytest`. To ensure tests run fast, remain fully independent, and do not dirty the development/production database, tests are executed against isolated, clean databases. This architecture mirrors a RAM-isolated (`:memory:`) database approach, creating a clean slate for each test execution and leaving zero database residues or side effects behind on the host system.
+
 ## Project Structure
 
 * `docs of project/`: Contains project specification files and task definitions.
