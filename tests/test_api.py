@@ -43,7 +43,8 @@ def authed_client(client):
 def test_start_conference_requires_login(client):
     # Tenta iniciar sem estar logado
     response = client.post("/api/conference/start")
-    assert response.status_code == 302 # login_required redireciona para /login
+    assert response.status_code == 401 # api_login_required retorna 401 JSON
+    assert "error" in response.get_json()
 
 @patch("routes.api.generate_first_question")
 @patch("routes.api.save_upload_file")
@@ -191,7 +192,8 @@ def test_start_conference_invalid_image_guardrail(mock_save_file, mock_gemini, a
 
 def test_submit_answer_requires_login(client):
     response = client.post("/api/conference/answer", json={"conference_id": 1, "answer": "Yes"})
-    assert response.status_code == 302 # Redireciona para /login
+    assert response.status_code == 401 # Retorna 401 JSON
+    assert "error" in response.get_json()
 
 
 @patch("routes.api.generate_next_question")
@@ -504,7 +506,8 @@ def test_history_route_success(authed_client):
 
 def test_get_conference_details_requires_login(client):
     response = client.get("/api/conference/1/details")
-    assert response.status_code == 302
+    assert response.status_code == 401
+    assert "error" in response.get_json()
 
 
 def test_get_conference_details_success(authed_client):
