@@ -11,14 +11,18 @@ class ChronicleResponse(BaseModel):
 
 # 1. Configuração do SDK do Gemini & Variáveis de Ambiente
 mock_gemini_env = os.getenv("MOCK_GEMINI", "false").lower() == "true"
-api_key = os.getenv("GEMINI_API_KEY")
 gemini_model_env = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 
 client = None
-if not mock_gemini_env:
-    if not api_key:
-        raise ValueError("GEMINI_API_KEY is missing from environment variables. Please check your .env file")
-    client = genai.Client(api_key=api_key)
+
+def _get_client():
+    global client
+    if client is None:
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            raise ValueError("GEMINI_API_KEY is missing from environment variables. Please check your .env file")
+        client = genai.Client(api_key=api_key)
+    return client
 
 def get_image_part(image_path: str) -> types.Part:
     """
@@ -63,7 +67,7 @@ def generate_first_question(image_path: str, context: str) -> str:
         "The question must be direct and in character. Do not include any intro, outro, or meta-commentary."
     )
     
-    response = client.models.generate_content(
+    response = _get_client().models.generate_content(
         model=gemini_model_env,
         contents=[img_part, prompt]
     )
@@ -100,7 +104,7 @@ def generate_next_question(image_path: str, context: str, history: list) -> str:
         "Do not repeat topics already discussed. Ask only one question. Do not include any intro or metadata."
     )
     
-    response = client.models.generate_content(
+    response = _get_client().models.generate_content(
         model=gemini_model_env,
         contents=[img_part, prompt]
     )
@@ -139,7 +143,7 @@ def generate_chronicle(image_path: str, context: str, history: list) -> dict:
         "- 'chronicle': The full, detailed sports article (around 200-300 words)."        
     )
     
-    response = client.models.generate_content(
+    response = _get_client().models.generate_content(
         model=gemini_model_env,
         contents=[img_part, prompt],
         config=types.GenerateContentConfig(
