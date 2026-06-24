@@ -1,7 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from functools import wraps
-from flask import session, redirect, url_for, flash
+from flask import session, redirect, url_for, flash, jsonify
 
 def hash_password(password: str) -> str:
     return generate_password_hash(password)
@@ -15,5 +15,13 @@ def login_required(f):
         if session.get("user_id") is None:
             flash("You need to be logged in to access this page.", "error")
             return redirect(url_for("auth.login"))
+        return f(*args, **kwargs)
+    return decorated
+
+def api_login_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if session.get("user_id") is None:
+            return jsonify({"error": "Authentication required"}), 401
         return f(*args, **kwargs)
     return decorated
