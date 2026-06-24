@@ -220,3 +220,7 @@ __marimo__/
 # Project Specific SQLite Databases
 conference_data.db
 *.db
+
+# Temporary Documentation / Feedback Files
+docs of project/epic_8_fix_improvements.md
+docs of project/avaliacao_pontos_melhoria.md
