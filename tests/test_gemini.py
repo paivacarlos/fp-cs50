@@ -98,15 +98,24 @@ def test_generate_next_question(mock_get_image, mock_client):
     assert "Reporter: And the fans?\nCoach: They supported us a lot." in prompt_sent
 
 
-def test_missing_api_key_raises_error():
-    """Testa se a ausência de GEMINI_API_KEY de fato gera ValueError ao carregar o módulo."""
+def test_missing_api_key_does_not_raise_error_on_import_but_on_client_creation():
+    """Testa se a ausência de GEMINI_API_KEY não gera erro ao carregar o módulo,
+    mas sim quando tentamos inicializar o cliente do Gemini."""
     # Removemos a chave do ambiente de testes temporariamente
     with patch.dict(os.environ, {}, clear=True):
         import services.gemini
-        # Como o módulo já foi importado no início do arquivo, precisamos forçar um recarregamento
-        # para que o código de validação global dele execute novamente sob o ambiente sem a variável.
-        with pytest.raises(ValueError, match="GEMINI_API_KEY is missing"):
+        # Forçamos um recarregamento para rodar o escopo do módulo
+        try:
             importlib.reload(services.gemini)
+        except ValueError:
+            pytest.fail("Module loading failed in the absence of GEMINI_API_KEY, violating lazy initialization.")
+        
+        # O cliente global deve estar limpo (None)
+        services.gemini.client = None
+        
+        # Ao tentar obter o cliente sob demanda, o erro deve ser lançado
+        with pytest.raises(ValueError, match="GEMINI_API_KEY is missing"):
+            services.gemini._get_client()
 
 
 @patch("services.gemini.client")
