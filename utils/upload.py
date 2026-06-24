@@ -8,6 +8,28 @@ def allowed_file(filename: str) -> bool:
     return ("." in filename and
             filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS)
 
+def validate_image_content(file_stream) -> bool:
+    """
+    Verifica os primeiros 12 bytes do arquivo (magic bytes) para validar a assinatura
+    de formatos de imagem suportados (PNG, JPEG, GIF). Restaura o ponteiro do fluxo ao final.
+    """
+    header = file_stream.read(12)
+    file_stream.seek(0)
+    
+    # PNG: 89 50 4E 47 0D 0A 1A 0A
+    if header.startswith(b"\x89PNG\r\n\x1a\n"):
+        return True
+    
+    # JPEG: FF D8 FF
+    if header.startswith(b"\xff\xd8\xff"):
+        return True
+    
+    # GIF: GIF87a ou GIF89a
+    if header.startswith(b"GIF87a") or header.startswith(b"GIF89a"):
+        return True
+        
+    return False
+
 def save_upload_file(file, upload_folder: str) -> str:
     # 1. arquivo foi enviado e tem nome?
     if not file or file.filename == "":
