@@ -29,7 +29,7 @@ def register():
         password_hashed = hash_password(password_from_form)
         execute_db("INSERT INTO users (username, hash) VALUES (?, ?)", (username_from_form, password_hashed))
 
-        flash("User created successfully.")
+        flash("User created successfully.", "success")
 
         user = query_db("SELECT * FROM users WHERE username = ?", (username_from_form,), one=True)
         session["user_id"] = user["id"]
@@ -56,7 +56,7 @@ def login():
         if user and check_password(user["hash"], password):
             session["user_id"] = user["id"]
             session["username"] = user["username"]
-            flash("Logged in successfully.")
+            flash("Logged in successfully.", "success")
             return redirect("/setup")
         
         flash("Invalid username or password.")
