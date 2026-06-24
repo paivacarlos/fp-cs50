@@ -39,6 +39,10 @@ def save_upload_file(file, upload_folder: str) -> str:
     if not allowed_file(file.filename):
         raise ValueError("File type not allowed")
 
+    # 2.5. Valida o conteúdo interno do arquivo (magic bytes)
+    if not validate_image_content(file.stream):
+        raise ValueError("Invalid image content")
+
     #3. garante que a pasta existe
     os.makedirs(upload_folder, exist_ok=True)
 

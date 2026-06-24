@@ -8,6 +8,7 @@ class MockFile:
     def __init__(self, filename, content=b""):
         self.filename = filename
         self.content = content
+        self.stream = BytesIO(content)
 
     def save(self, filepath):
         with open(filepath, "wb") as f:
@@ -23,7 +24,7 @@ def test_save_upload_file_success(tmp_path):
     # Usando o diretório temporário gerado pelo pytest
     upload_dir = str(tmp_path / "uploads")
     
-    mock_file = MockFile("screenshot.png", b"image data")
+    mock_file = MockFile("screenshot.png", b"\x89PNG\r\n\x1a\nimage data")
     
     relative_path = save_upload_file(mock_file, upload_dir)
     
