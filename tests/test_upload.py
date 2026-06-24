@@ -49,3 +49,11 @@ def test_save_upload_file_empty_filename(tmp_path):
     
     with pytest.raises(ValueError, match="No file selected or empyt filename"):
         save_upload_file(mock_file, upload_dir)
+
+def test_save_upload_file_invalid_magic_bytes(tmp_path):
+    upload_dir = str(tmp_path / "uploads")
+    # Arquivo com extensão png válida, mas cabeçalho binário inválido (de texto)
+    mock_file = MockFile("test.png", b"fake text content here")
+    
+    with pytest.raises(ValueError, match="Invalid image content"):
+        save_upload_file(mock_file, upload_dir)

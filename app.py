@@ -12,7 +12,8 @@ app = Flask(__name__)
 app.config.update(
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE="Lax",
-    SESSION_COOKIE_SECURE=False # Alterar para TRUE quando subir me PROD
+    SESSION_COOKIE_SECURE=False, # Alterar para TRUE quando subir me PROD
+    MAX_CONTENT_LENGTH=5 * 1024 * 1024 # Limite de upload de 5MB
 )
 
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "key-secret-develop-env")

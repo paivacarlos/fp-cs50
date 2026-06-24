@@ -569,5 +569,19 @@ def test_get_conference_details_unauthorized(authed_client):
     assert response.status_code == 403
     assert response.get_json()["error"] == "Unauthorized access to this conference"
 
+def test_upload_file_exceeds_size_limit(authed_client):
+    # Envia um arquivo com tamanho maior que 5MB (ex: 5.1 MB)
+    large_data = b"\x89PNG\r\n\x1a\n" + b"0" * (5 * 1024 * 1024 + 100)
+    data = {
+        "screenshot": (io.BytesIO(large_data), "large_image.png"),
+        "initial_context": "Any context"
+    }
+    response = authed_client.post(
+        "/api/conference/start",
+        data=data,
+        content_type="multipart/form-data"
+    )
+    assert response.status_code == 413 # Request Entity Too Large
+
 
 
