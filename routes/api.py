@@ -1,6 +1,6 @@
 import os
 from flask import Blueprint, request, jsonify, session
-from utils.security import login_required
+from utils.security import api_login_required
 from utils.upload import save_upload_file
 from services.db import get_db
 from services.gemini import generate_first_question, generate_next_question, generate_chronicle
@@ -8,7 +8,7 @@ from services.gemini import generate_first_question, generate_next_question, gen
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 
 @api_bp.route("/conference/start", methods=["POST"])
-@login_required
+@api_login_required
 def start_conference():
     # 1. Validar se o arquivo de screenshot está presente
     if "screenshot" not in request.files:
@@ -88,7 +88,7 @@ def start_conference():
 
 
 @api_bp.route("/conference/answer", methods=["POST"])
-@login_required
+@api_login_required
 def submit_answer():
     # 1. Validar a presença de dados na requisição JSON
     data = request.get_json()
@@ -245,7 +245,7 @@ def submit_answer():
 
 
 @api_bp.route("/conference/<int:conference_id>/details", methods=["GET"])
-@login_required
+@api_login_required
 def get_conference_details(conference_id):
     user_id = session["user_id"]
     with get_db() as conn:
