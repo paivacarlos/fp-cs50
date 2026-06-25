@@ -151,11 +151,18 @@ setupForm.addEventListener('submit', async (e) => {
             return;
         }
 
-        const data = await response.json();
-
         if (!response.ok) {
-            throw new Error(data.error || 'Failed to start conference');
+            let errorMsg = 'Failed to start conference';
+            try {
+                const errorData = await response.json();
+                errorMsg = errorData.error || errorMsg;
+            } catch (e) {
+                errorMsg = `Server Error (${response.status}): ${response.statusText || 'Internal Server Error'}`;
+            }
+            throw new Error(errorMsg);
         }
+
+        const data = await response.json();
 
         // Set session identifiers
         currentConferenceId = data.conference_id;
@@ -209,11 +216,18 @@ answerForm.addEventListener('submit', async (e) => {
             return;
         }
 
-        const data = await response.json();
-
         if (!response.ok) {
-            throw new Error(data.error || 'Failed to submit answer');
+            let errorMsg = 'Failed to submit answer';
+            try {
+                const errorData = await response.json();
+                errorMsg = errorData.error || errorMsg;
+            } catch (e) {
+                errorMsg = `Server Error (${response.status}): ${response.statusText || 'Internal Server Error'}`;
+            }
+            throw new Error(errorMsg);
         }
+
+        const data = await response.json();
 
         // Check if final round is complete
         if (data.status === 'complete') {

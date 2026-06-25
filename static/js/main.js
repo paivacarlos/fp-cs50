@@ -1,6 +1,6 @@
 // Fade out and remove flash messages automatically after a few seconds
 document.addEventListener('DOMContentLoaded', () => {
-    const flashMessages = document.querySelectorAll('.flash-message');
+    const flashMessages = document.querySelectorAll('.flash-messages .flash-message');
     flashMessages.forEach((msg) => {
         setTimeout(() => {
             msg.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
