@@ -13,7 +13,7 @@
 
 ### 📺 Video Walkthrough
 > [!IMPORTANT]
-> **Video Link:** [Watch the Final Project Video Walkthrough on YouTube](https://youtu.be/xxxxxx) *(Placeholder - please paste your recorded YouTube video URL here before submitting)*
+> **Video Link:** [Watch the Final Project Video Walkthrough on YouTube](https://www.youtube.com/watch?v=0ttOoKFQ9NI)
 
 ---
 
